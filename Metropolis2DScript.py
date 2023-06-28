@@ -24,10 +24,10 @@ def run():
     Tfinals = xp.logspace(-8.0, 2.0, 11)
     for Tfinal in Tfinals:
         print(f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-        met = Metropolis2D(Jnonlocal, Jlocal, Tfinal, steps=20000)
+        met = Metropolis2D(Jnonlocal, Tfinal, steps=20000, sigma=0.05, Nspins=Nspins)
         final_state = met.run()
         print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-        with open(f"MetropolisRuns/T={Tfinal:.1e}.pickle", "wb") as f:
+        with open(f"MetropolisRuns/2component/T={Tfinal:.1e}.pickle", "wb") as f:
             pickle.dump(met, f)
         del met
 

@@ -87,14 +87,16 @@ class Metropolis:
             xp.sum(this_state[:, :, 0]*xp.cos(this_state[:, :, 1]), axis=1)
         if xp.isnan(energy).any():
             print("Zenergy threw the nan")
-        energy += -xp.einsum("i,ji->j", self.Jlocal,
-                             xp.square(this_state[:, :, 0]*xp.sin(this_state[:, :, 1])))
-        if xp.isnan(energy).any():
-            print("Jlocal threw the nan")
         x_vec = this_state[:, :, 0] * \
             xp.sin(this_state[:, :, 1])*xp.cos(this_state[:, :, 2])
         y_vec = this_state[:, :, 0] * \
             xp.sin(this_state[:, :, 1])*xp.sin(this_state[:, :, 2])
+        
+        rho = xp.square(x_vec) + xp.square(y_vec)
+
+        energy += -xp.einsum("i,ji->j", self.Jlocal, rho)
+        if xp.isnan(energy).any():
+            print("Jlocal threw the nan")
         energy += -xp.einsum("fj,jk,fk->f", x_vec, self.Jnonlocal, x_vec) + \
             xp.einsum("fj,jk,fk->f", y_vec, self.Jnonlocal, y_vec)
         if xp.isnan(energy).any():
@@ -110,7 +112,7 @@ class Metropolis:
         for i in range(self.Nspins):
             spin = this_state[:, i, :]
             energy += self.confine_energy_mag * \
-                (xp.abs(spin[:, 0] >= 1))*spin[:, 0]
+                xp.abs(np.logical_or(spin[:, 0] >= 1, spin[:,0] < 0))*np.abs(spin[:, 0])
         return energy
 
     def plot_energy_record(self, ax=None):
@@ -159,7 +161,7 @@ class Metropolis:
 
 
 class Metropolis_Time_Recorded:
-    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=1000, sigma=0.01, confine_energy_mag=1e12):
+    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=1000, sigma=0.01, confine_energy_mag=1e33):
         self.Jnonlocal = Jnonlocal
         self.Jlocal = Jlocal
         self.Zenergy = Zenergy
@@ -287,9 +289,8 @@ class Metropolis_Time_Recorded:
 
 
 class Metropolis2D:
-    def __init__(self, Jnonlocal, Jlocal, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12):
+    def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12):
         self.Jnonlocal = check_CuPy(Jnonlocal)
-        self.Jlocal = check_CuPy(Jlocal)
         self.Tfinal = Tfinal
         self.Nrepl = Nrepl
         self.Nspins = Nspins
@@ -343,8 +344,6 @@ class Metropolis2D:
 
     def motional_model(self, this_state):
         energy = xp.zeros(self.Nrepl)
-        if xp.isnan(energy).any():
-            print("Jlocal threw the nan")
         x_vec = xp.cos(this_state)
         y_vec = xp.sin(this_state)
         energy += -xp.einsum("fj,jk,fk->f", x_vec, self.Jnonlocal, x_vec) + \
