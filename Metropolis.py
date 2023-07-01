@@ -17,7 +17,7 @@ def check_CuPy(arr):
 
 
 class Metropolis:
-    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12, AnnealT=100.):
+    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=xp.pi/10, sigmaR=0.1, confine_energy_mag=1e12, AnnealT=100., AnnealHigh=1.5):
         self.Jnonlocal = check_CuPy(Jnonlocal)
         self.Jlocal = check_CuPy(Jlocal)
         self.Zenergy = Zenergy
@@ -26,13 +26,16 @@ class Metropolis:
         self.Nspins = Nspins
         self.steps = steps
         self.sigma = sigma
+        self.sigmaR = sigmaR
         self.confine_energy_mag = confine_energy_mag
         self.AnnealT = AnnealT
+        self.AnnealHigh = AnnealHigh
         self.energy_record = xp.zeros((self.Nrepl, self.steps))
         self.curr_state = xp.zeros((self.Nrepl, self.Nspins, 3))
 
     def run(self):
-        temp = xp.exp(-xp.arange(self.steps)/(10*self.Nspins)) + self.Tfinal
+        temp = self.AnnealHigh * \
+            xp.exp(-xp.arange(self.steps)/(self.AnnealT)) + self.Tfinal
 
         # indexing for the states
         self.curr_state[:, :, 0] = xp.random.rand(self.Nrepl, self.Nspins)
@@ -53,7 +56,7 @@ class Metropolis:
                     loc=0.0, scale=self.sigma, size=(self.Nrepl, self.Nspins, 2))
             else:
                 displacement[:, :, 0] = xp.random.normal(
-                    loc=0.0, scale=self.sigma, size=(self.Nrepl, self.Nspins))
+                    loc=0.0, scale=self.sigmaR, size=(self.Nrepl, self.Nspins))
                 displacement[:, :, 1:] = xp.zeros((self.Nrepl, self.Nspins, 2))
 
             tentative_state = displacement + self.curr_state
@@ -92,7 +95,7 @@ class Metropolis:
             xp.sin(this_state[:, :, 1])*xp.cos(this_state[:, :, 2])
         y_vec = this_state[:, :, 0] * \
             xp.sin(this_state[:, :, 1])*xp.sin(this_state[:, :, 2])
-        
+
         rho = xp.square(x_vec) + xp.square(y_vec)
 
         energy += -xp.einsum("i,ji->j", self.Jlocal, rho)
@@ -113,7 +116,8 @@ class Metropolis:
         for i in range(self.Nspins):
             spin = this_state[:, i, :]
             energy += self.confine_energy_mag * \
-                xp.abs(np.logical_or(spin[:, 0] >= 1, spin[:,0] < 0))*np.abs(spin[:, 0])
+                xp.abs(np.logical_or(spin[:, 0] >= 1,
+                       spin[:, 0] < 0))*np.abs(spin[:, 0])
         return energy
 
     def plot_energy_record(self, ax=None):
@@ -288,7 +292,6 @@ class Metropolis_Time_Recorded:
         plt.plot([0.0, -1.0], [1.0, 0.0], 'r-')
 
 
-
 class Metropolis2D:
     def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=8, steps=10000, sigma=xp.pi/10, confine_energy_mag=1e12, AnnealT=100, AnnealHigh=1.5):
         self.Jnonlocal = check_CuPy(Jnonlocal)
@@ -304,7 +307,8 @@ class Metropolis2D:
         self.curr_state = xp.zeros((self.Nrepl, self.Nspins))
 
     def run(self):
-        temp = self.AnnealHigh*xp.exp(-xp.arange(self.steps)/self.AnnealT) + self.Tfinal
+        temp = self.AnnealHigh * \
+            xp.exp(-xp.arange(self.steps)/self.AnnealT) + self.Tfinal
 
         # indexing for the states
         self.curr_state = 2*xp.pi * \
