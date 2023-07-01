@@ -17,7 +17,7 @@ def check_CuPy(arr):
 
 
 class Metropolis:
-    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12):
+    def __init__(self, Jnonlocal, Jlocal, Zenergy, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12, AnnealT=100.):
         self.Jnonlocal = check_CuPy(Jnonlocal)
         self.Jlocal = check_CuPy(Jlocal)
         self.Zenergy = Zenergy
@@ -27,6 +27,7 @@ class Metropolis:
         self.steps = steps
         self.sigma = sigma
         self.confine_energy_mag = confine_energy_mag
+        self.AnnealT = AnnealT
         self.energy_record = xp.zeros((self.Nrepl, self.steps))
         self.curr_state = xp.zeros((self.Nrepl, self.Nspins, 3))
 
@@ -289,7 +290,7 @@ class Metropolis_Time_Recorded:
 
 
 class Metropolis2D:
-    def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=20, steps=10000, sigma=0.01, confine_energy_mag=1e12):
+    def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=8, steps=10000, sigma=xp.pi/10, confine_energy_mag=1e12, AnnealT=100, AnnealHigh=1.5):
         self.Jnonlocal = check_CuPy(Jnonlocal)
         self.Tfinal = Tfinal
         self.Nrepl = Nrepl
@@ -297,11 +298,13 @@ class Metropolis2D:
         self.steps = steps
         self.sigma = sigma
         self.confine_energy_mag = confine_energy_mag
+        self.AnnealT = AnnealT
+        self.AnnealHigh = AnnealHigh
         self.energy_record = xp.zeros((self.Nrepl, self.steps))
         self.curr_state = xp.zeros((self.Nrepl, self.Nspins))
 
     def run(self):
-        temp = xp.exp(-xp.arange(self.steps)/(10*self.Nspins)) + self.Tfinal
+        temp = self.AnnealHigh*xp.exp(-xp.arange(self.steps)/self.AnnealT) + self.Tfinal
 
         # indexing for the states
         self.curr_state = 2*xp.pi * \
