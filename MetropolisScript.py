@@ -34,23 +34,23 @@ def run():
                            0.35817871, -0.52707744, -0.78813721]])
     Jlocal = 10.*xp.ones(Nspins)
 
-    Zenergies = xp.logspace(-3.0, 3.0, 7)
-    Tfinals = max(xp.linalg.eigvalsh(Jnonlocal)) * \
-        xp.array([0.0, 0.05, 0.1, 0.5, 1.0, 1.5])
+    Zenergies = xp.linspace(24.0, 28.0, 3)
+    Tc=max(xp.linalg.eigvalsh(Jnonlocal))
+    Tfinal =  0.05*Tc
 
     AnnealHigh = max(xp.linalg.eigvalsh(Jnonlocal))*1.5
     AnnealT = 50000
-    for Tfinal in Tfinals:
-        for Zenergy in Zenergies:
-            print(
-                f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-            met = Metropolis(Jnonlocal, Jlocal, Zenergy, Tfinal,
-                             steps=int(3*AnnealT), sigma=xp.pi/10., Nspins=Nspins, AnnealT=AnnealT, AnnealHigh=AnnealHigh)
-            final_state = met.run()
-            print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-            with open(f"MetropolisRuns/3component/Ze={Zenergy:.1e},T={Tfinal:.1e}.pickle", "wb") as f:
-                pickle.dump(met, f)
-            del met
+    Nrepl=500
+    for Zenergy in Zenergies:
+        print(
+            f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
+        met = Metropolis(Jnonlocal, Jlocal, Zenergy, Tfinal,
+                            steps=int(3*AnnealT), sigma=xp.pi/10., Nrepl=Nrepl, Nspins=Nspins, AnnealT=AnnealT, AnnealHigh=AnnealHigh)
+        final_state = met.run()
+        print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
+        with open(f"MetropolisRuns/3component/Ze={Zenergy:.2e},T={Tfinal/Tc:.1e}.pickle", "wb") as f:
+            pickle.dump(met, f)
+        del met
 
 
 if __name__ == "__main__":

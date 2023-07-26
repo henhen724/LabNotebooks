@@ -15,6 +15,7 @@ def run():
     mempool = xp.get_default_memory_pool()
 
     Nspins = 8
+
     Jnonlocal = xp.array([[-1.46000754,  0.66307027, -0.36324195, -0.89853853,  0.10771147,
                            -0.36567651, -0.58853263,  0.16587756],
                           [0.66307027, -0.96435315, -0.01312276, -0.79007184,  0.30340302,
@@ -32,16 +33,20 @@ def run():
                           [0.16587756,  0.15204514,  0.35162467,  1.05812929,  1.51076996,
                            0.35817871, -0.52707744, -0.78813721]])
 
-    Tfinals = xp.logspace(-8.0, 2.0, 11)
-    for Tfinal in Tfinals:
-        print(f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-        met = Metropolis2D(Jnonlocal, Tfinal, steps=20000,
-                           sigma=0.05, Nspins=Nspins)
-        final_state = met.run()
-        print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-        with open(f"MetropolisRuns/2component/T={Tfinal:.1e}.pickle", "wb") as f:
-            pickle.dump(met, f)
-        del met
+    Tc=max(xp.linalg.eigvalsh(Jnonlocal))
+    Tfinal =  0.05*Tc
+
+    AnnealHigh = max(xp.linalg.eigvalsh(Jnonlocal))*1.5
+    AnnealT = 50000
+    Nrepl=500
+
+    print(f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
+    met = Metropolis2D(Jnonlocal, Tfinal, steps=int(3*AnnealT), sigma=xp.pi/10., Nrepl=Nrepl, Nspins=Nspins, AnnealT=AnnealT, AnnealHigh=AnnealHigh)
+    final_state = met.run()
+    print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
+    with open(f"MetropolisRuns/2component/T={Tfinal:.1e}.pickle", "wb") as f:
+        pickle.dump(met, f)
+    del met
 
 
 if __name__ == "__main__":
