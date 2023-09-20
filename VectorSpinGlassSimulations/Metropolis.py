@@ -314,8 +314,9 @@ class Metropolis_Time_Recorded:
 
 
 class Metropolis2D:
-    def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=8, steps=10000, sigma=xp.pi/10, confine_energy_mag=1e12, AnnealT=100, AnnealHigh=1.5):
+    def __init__(self, Jnonlocal, Tfinal, Nrepl=100, Nspins=8, steps=10000, sigma=xp.pi/10, confine_energy_mag=1e12, AnnealT=100, AnnealHigh=1.5, Jlocal=None):
         self.Jnonlocal = check_CuPy(Jnonlocal)
+        self.Jlocal = Jlocal
         self.Tfinal = Tfinal
         self.Nrepl = Nrepl
         self.Nspins = Nspins
