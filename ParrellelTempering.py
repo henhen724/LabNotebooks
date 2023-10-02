@@ -18,7 +18,7 @@ def check_CuPy(arr):
 
 
 class ParrallelTempering:
-    def __init__(self, Jnonlocal, Jlocal, K, Zenergy, temps, Nrepl=500, Nspins=20, steps=10000, sigma=xp.pi/10, sigmaR=0.01, confine_energy_mag=1e12, Equilibration=100, Nbins=40):
+    def __init__(self, Jnonlocal, Jlocal, K, Zenergy, temps, Nrepl=500, Nspins=20, steps=10000, sigma=xp.pi/10, sigmaR=0.01, confine_energy_mag=1e12, Equilibration=100, Nbins=79):
         self.Jnonlocal = check_CuPy(Jnonlocal)
         self.Jlocal = check_CuPy(Jlocal)
         self.K = check_CuPy(K)
@@ -34,7 +34,8 @@ class ParrallelTempering:
         self.sigmaR = sigmaR
         self.confine_energy_mag = confine_energy_mag
         self.energy_record = xp.zeros((self.Ntemps, self.Nrepl, self.steps))
-        self.angle_overlap_hist = xp.zeros((self.Ntemps, Nbins, Nbins))
+        self.flip_acc_rec = xp.zeros(self.steps//self.Equilibration)
+        self.angle_overlap_hist = xp.zeros((self.Ntemps, Nbins, Nbins)) # axis one is Q = qxx + qyy and axis two is R = qxx - qyy
         self.curr_state = xp.zeros((self.Ntemps, self.Nrepl, self.Nspins, 3))
 
     def run(self):
@@ -82,9 +83,12 @@ class ParrallelTempering:
                 self.curr_state = xp.einsum("fi,fijk->fijk", state_decissions, tentative_state) + xp.einsum(
                     "fi,fijk->fijk", xp.logical_not(state_decissions), self.curr_state)
                 
+            self.record_angle_overlap()
+
             # Now swap neighbouring tempuratures based on total energy
             curr_energies = self.motional_model(self.curr_state)
             mod2Compare = eqlNum % 2 # switch between comparing 0 mod 4 to 1 mod 4 and comparing 1 mod 4 to 2 mod 4
+            numOfFlips = 0
             for comparisonNum in range(self.Ntemps//2 - 1):
                 lowerTemp = 2*comparisonNum+mod2Compare
                 higherTemp = 2*comparisonNum+mod2Compare+1
@@ -94,7 +98,9 @@ class ParrallelTempering:
                 self.curr_state[higherTemp] = xp.einsum("i,ijk->ijk", state_decissions, self.curr_state[lowerTemp]) + xp.einsum(
                     "i,ijk->ijk", xp.logical_not(state_decissions), self.curr_state[higherTemp])
                 self.curr_state[lowerTemp] = temporarylowerTempStates
-
+                numOfFlips += xp.sum(state_decissions)
+            print("Fraction of Flips Accepted: ", numOfFlips/(self.Nrepl*(self.Ntemps//2)))
+            self.flip_acc_rec[eqlNum] = numOfFlips/(self.Nrepl*(self.Ntemps//2))
 
         self.energy_record[:, :, self.steps -
                            1] = self.motional_model(self.curr_state)
@@ -159,6 +165,24 @@ class ParrallelTempering:
                       y_vec[:, :, spin].get(), bins=100)
         else:
             ax.hist2d(x_vec[:, :, spin], y_vec[:, spin], bins=100)
+
+    def f_rd(self, M):
+        return xp.ndarray.flatten(M[~np.eye(M.shape[0],dtype=bool)])
+
+    def record_angle_overlap(self):
+        x_vec = xp.sign(xp.sin(self.curr_state[:, :, :, 1]))*xp.cos(self.curr_state[:, :, :, 2])
+        y_vec = xp.sign(xp.sin(self.curr_state[:, :, :, 1]))*xp.sin(self.curr_state[:, :, :, 2])
+        qxx = xp.einsum("tai,tbi->tab", x_vec, x_vec)/self.Nspins
+        qyy = xp.einsum("tai,tbi->tab", y_vec, y_vec)/self.Nspins
+        Q = qxx + qyy
+        R = qxx - qyy
+
+        for i in range(self.temps.shape[0]):
+            Qflat = self.f_rd(Q[i])
+            Rflat = self.f_rd(R[i])
+            add_to_hist,_,_ = xp.histogram2d(Qflat, Rflat, bins=[79.,79.], range=[[-1.,1.],[-1.,1.]])
+            self.angle_overlap_hist[i] += add_to_hist
+
 
     def plot_angle_overlap_distribution(self, tempIdx, ax=None):
         if ax is None:
