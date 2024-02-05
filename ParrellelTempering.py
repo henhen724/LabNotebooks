@@ -96,7 +96,7 @@ class ParrallelTempering:
             for comparisonNum in range(self.Ntemps//2 - 1):
                 lowerTemp = 2*comparisonNum+mod2Compare
                 higherTemp = 2*comparisonNum+mod2Compare+1
-                state_decissions = curr_energies[higherTemp] < curr_energies[lowerTemp]
+                state_decissions = xp.random.rand(self.Nrepl) < (1/self.temps[higherTemp] - 1/self.temps[lowerTemp])*(curr_energies[higherTemp] - curr_energies[lowerTemp])
                 temporarylowerTempStates = xp.einsum("i,ijk->ijk", state_decissions, self.curr_state[higherTemp]) + xp.einsum(
                     "i,ijk->ijk", xp.logical_not(state_decissions), self.curr_state[lowerTemp])
                 self.curr_state[higherTemp] = xp.einsum("i,ijk->ijk", state_decissions, self.curr_state[lowerTemp]) + xp.einsum(

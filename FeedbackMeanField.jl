@@ -17,13 +17,26 @@ function save_correlators(Δ, ω, κ, g)
 
     g_c = 1/2*sqrt(ω*(Δ^2 + κ^2)/Δ)
 
-    if g > g_c
-        inital = [g*Δ/(Δ^2 + κ^2), 0, 1.0, 0, (Δ^2 + κ^2)/Δ*ω/g^2]
-    else
-        inital = [0., 0., 1.0, 0., 0.]
-    end
+    # if g > g_c
+    #     inital = [g*Δ/(Δ^2 + κ^2), 0, 1.0, 0, (Δ^2 + κ^2)/Δ*ω/g^2]
+    # else
+    #     inital = [0., 0., 1.0, 0., 0.]
+    # end
+    angle = 2*pi*rand(Float64, 2)
+    angle[1] = angle[1] % pi
+    x = rand(Float64)
+    inital = [x,0., sin(angle[1]), cos(angle[1])*cos(angle[2]), cos(angle[1])*sin(angle[2])]
+
+    t_last_bang = 0.0
+    cool_down_t = 0.1
+    max_x = 0.9
 
     function dicke(du, u, p, t)
+        if u[1] < max_x && t - t_last_bang > cool_down_t
+            t_last_bang = t
+            g = -g
+        end
+
         du[1] = Δ*u[2]-κ*u[1]
         du[2] = -Δ*u[1]-κ*u[2]+g*u[3]
         du[3] = -ω*u[4]
@@ -49,12 +62,12 @@ function save_correlators(Δ, ω, κ, g)
     
     gstr = @sprintf("%.3f", g)
 
-    JLD2.save_object("DickeRuns/d=$Δ w=$ω k=$κ g=$gstr xx.jld2", twopointxx)
-    JLD2.save_object("DickeRuns/d=$Δ w=$ω k=$κ g=$gstr xy.jld2", twopointxy)
-    JLD2.save_object("DickeRuns/d=$Δ w=$ω k=$κ g=$gstr yx.jld2", twopointyx)
-    JLD2.save_object("DickeRuns/d=$Δ w=$ω k=$κ g=$gstr yy.jld2", twopointyy)
+    JLD2.save_object("BangBangRuns/d=$Δ w=$ω k=$κ g=$gstr xx.jld2", twopointxx)
+    JLD2.save_object("BangBangRuns/d=$Δ w=$ω k=$κ g=$gstr xy.jld2", twopointxy)
+    JLD2.save_object("BangBangRuns/d=$Δ w=$ω k=$κ g=$gstr yx.jld2", twopointyx)
+    JLD2.save_object("BangBangRuns/d=$Δ w=$ω k=$κ g=$gstr yy.jld2", twopointyy)
 end
 
-for g in 10 .^(LinRange(-3.,3.,7))
+for g in LinRange(0.3,0.5, 21)
     save_correlators(1.0, 1.0, 0.01, g)
 end
