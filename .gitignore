@@ -1,2 +1,4 @@
 MetropolisRuns/**
 **__pycache__**
+**.npy
+**.jld2

@@ -6,6 +6,7 @@ try:
     import cupy as xp
     GPUAcc = True
     print("Using GPU Acceleration")
+    import numpy as np
 except:
     import numpy as xp
 
@@ -31,8 +32,25 @@ def harm_greens_fnc_v2(posx, posy, sigma, tval):
     return normalization*xp.exp(-(1+g)/(4*(1-g**2*tval**2))*2*(term1 + term2))
 
 def K_fnc(posx, posy, sigma):
-    rdot = (xp.outer(posx,posx) + xp.outer(posy,posy))
-    return 8 * sigma**2 * rdot * xp.sin(2*rdot)
+    N = posx.shape[0]
+    weff = xp.sqrt(1 + 4*sigma**4)
+
+    x = xp.einsum("i,j->ij",posx,xp.ones(N)) 
+    xT = xp.einsum("i,j->ij",xp.ones(N),posx)
+
+    y = xp.einsum("i,j->ij",posy,xp.ones(N)) 
+    yT = xp.einsum("i,j->ij",xp.ones(N),posy)
+
+    rdot = 0.25*(xp.square(x + xT) + xp.square(y + yT) - xp.square(x - xT) - xp.square(y - yT)) / weff**2 # calculates ri dot rj / w0^2
+    rnorm = 0.5*(xp.square(x - xT) + xp.square(y - yT) + xp.square(x + xT) + xp.square(y + yT)) # calculates (ri^2 + rj^2) / w0^2
+    
+    prefactor = - 2*sigma**2 / weff**2
+    expenvelope = xp.exp(-2*sigma**2*rnorm/weff**2)
+    
+    # return 8 * sigmaA**2 / w0**2 * rdot * xp.sin(2*rdot)
+    return prefactor * expenvelope * (4*rdot * xp.sin(2*rdot) - 2*prefactor * rnorm * xp.cos(2*rdot))
+    # rdot = (xp.outer(posx,posx) + xp.outer(posy,posy))
+    # return 8 * sigma**2 * rdot * xp.sin(2*rdot)
 
 def harm_greens_fnc_diagonal_v2(posx, posy, sigma, tval):
     N = posx.shape[0]
@@ -51,7 +69,7 @@ def confoncal_greens_fnc_nonlocal_v2(posx, posy, sigma, tval):
 def confoncal_greens_fnc_local_v2(posx, posy, sigma, tval):
     return harm_greens_fnc_diagonal_v2(posx, posy, sigma, tval) + harm_greens_fnc_diagonal_v2(posx, posy, sigma, -tval)
 
-def generate_Js_v2(pos_sigma = 0.2, sigma_A=4.0/35.2):
+def generate_Js_v2(pos_sigma = 0.2, Nspins=8, sigma_A=4.0/35.2):
     posx = xp.random.normal(loc=0,scale=pos_sigma, size=Nspins)
     posy = xp.random.normal(loc=0,scale=pos_sigma, size=Nspins)
 
@@ -67,35 +85,43 @@ def run(i):
     Nspins = 8
     Nrepl = 500
 
-    pos_sigma=2.0
-    posx = xp.random.normal(loc=0,scale=pos_sigma, size=Nspins)
-    posy = xp.random.normal(loc=0,scale=pos_sigma, size=Nspins)
+    posx = xp.load("J_Matrix_Positions/allX.npy")
+    posy = xp.load("J_Matrix_Positions/allY.npy")
 
-    Jnonlocal = xp.real(confoncal_greens_fnc_nonlocal_v2(posx,posy, 4.0/35.2,1.0))
-    K = K_fnc(posx, posy, 4.0/35.2)
-    Jlocal = xp.real(confoncal_greens_fnc_local_v2(posx, posy, 4.0/35.2,1.0))
+    posx = posx/35.2e-6
+    posy = posy/35.2e-6
 
-    Tc = max(xp.abs(xp.linalg.eigvalsh(Jnonlocal)))
+    Jnonlocals = xp.zeros((posx.shape[0], 8, 8))
+    Ks = xp.zeros((posx.shape[0], 8, 8))
+    Jlocals = xp.zeros((posx.shape[0], 8))
 
-    N = 2*max(Jlocal)+2*Tc
+    GoodIndeces = []
 
-    Jnonlocal = Jnonlocal/N
-    K = K/N
-    Jlocal = Jlocal/N
+    for i in range(posx.shape[0]):
+        if (not xp.isnan(posx[i]).any()) and (not xp.isnan(posy[i]).any()):
+            GoodIndeces.append(i)
 
-    Tfinal = 0.001*Tc
-    AnnealHigh = Tfinal*1.5
-    AnnealT = 5000
+        Jnonlocals[i] = xp.real(confoncal_greens_fnc_nonlocal_v2(posx[i],posy[i], 4.0/35.2,1.0))
+        Ks[i] = K_fnc(posx[i], posy[i], 4.0/35.2)
+        Jlocals[i] = xp.real(confoncal_greens_fnc_local_v2(posx[i], posy[i], 4.0/35.2,1.0))
 
-    print(f"Pre-Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-    met = Metropolis2D(Jnonlocal, K, Tfinal, steps=int(3*AnnealT), sigma=xp.pi/10., Nrepl=Nrepl, Nspins=Nspins, AnnealT=AnnealT, AnnealHigh=AnnealHigh, Jlocal=Jlocal)
-    final_state = met.run()
-    print(f"Metropolis GPU Memory {mempool.used_bytes()/2**20:.2f} Mb")
-    with open(f"MetropolisRuns/FindingJs/{i}.pickle", "wb") as f:
-        pickle.dump(met, f)
-    del met
+        M = np.block([[xp.asnumpy(Jnonlocals[i]), xp.asnumpy(Ks[i])],[xp.asnumpy(Ks[i]), -xp.asnumpy(Jnonlocals[i])]])
+        M = xp.array(M)
+
+        Tc = max(xp.linalg.eigvalsh(M))
+
+        N = max(Jlocals[i])+Tc
+
+        Jnonlocals[i] = Jnonlocals[i]/N
+        Ks[i] = Ks[i]/N
+        Jlocals[i] = Jlocals[i]/N
+    print(GoodIndeces)
+    xp.save("PosBasedJnonlocals.npy", Jnonlocals[GoodIndeces])
+    xp.save("PosBasedKs.npy", Ks[GoodIndeces])
+    xp.save("PosBasedJlocals.npy", Jlocals[GoodIndeces])
+
+
 
 
 if __name__ == "__main__":
-    for i in range(150):
-        run(i)
+    run(0)

@@ -36,6 +36,8 @@ class ParrallelTempering:
         self.energy_record = xp.zeros((self.Ntemps, self.Nrepl, self.steps))
         self.flip_acc_rec = xp.zeros(self.steps//self.Equilibration)
         self.angle_overlap_hist = xp.zeros((self.Ntemps, Nbins, Nbins)) # axis one is Q = qxx + qyy and axis two is R = qxx - qyy
+        self.radial_hist = xp.zeros((self.Ntemps, 50))
+        self.rho_hist = xp.zeros((self.Ntemps, 50))
         self.curr_state = xp.zeros((self.Ntemps, self.Nrepl, self.Nspins, 3))
 
     def run(self):
@@ -84,6 +86,8 @@ class ParrallelTempering:
                     "fi,fijk->fijk", xp.logical_not(state_decissions), self.curr_state)
                 
             self.record_angle_overlap()
+            self.record_radial_hist()
+            self.record_rho_hist()
 
             # Now swap neighbouring tempuratures based on total energy
             curr_energies = self.motional_model(self.curr_state)
@@ -92,7 +96,7 @@ class ParrallelTempering:
             for comparisonNum in range(self.Ntemps//2 - 1):
                 lowerTemp = 2*comparisonNum+mod2Compare
                 higherTemp = 2*comparisonNum+mod2Compare+1
-                state_decissions = curr_energies[higherTemp] < curr_energies[lowerTemp]
+                state_decissions = xp.random.rand(self.Nrepl) < (1/self.temps[higherTemp] - 1/self.temps[lowerTemp])*(curr_energies[higherTemp] - curr_energies[lowerTemp])
                 temporarylowerTempStates = xp.einsum("i,ijk->ijk", state_decissions, self.curr_state[higherTemp]) + xp.einsum(
                     "i,ijk->ijk", xp.logical_not(state_decissions), self.curr_state[lowerTemp])
                 self.curr_state[higherTemp] = xp.einsum("i,ijk->ijk", state_decissions, self.curr_state[lowerTemp]) + xp.einsum(
@@ -183,6 +187,18 @@ class ParrallelTempering:
             add_to_hist,_,_ = xp.histogram2d(Qflat, Rflat, bins=[79.,79.], range=[[-1.,1.],[-1.,1.]])
             self.angle_overlap_hist[i] += add_to_hist
 
+
+    def record_radial_hist(self):
+        r_vec = self.curr_state[:, :, :, 0]
+        for i in range(self.temps.shape[0]):
+            add_to_hist,_ = xp.histogram(r_vec[i], bins=50, range=[0.,1.])
+            self.radial_hist[i] += add_to_hist
+
+    def record_rho_hist(self):
+        r_vec = self.curr_state[:, :, :, 0]*xp.abs(xp.sin(self.curr_state[:, :, :, 1]))
+        for i in range(self.temps.shape[0]):
+            add_to_hist,_ = xp.histogram(r_vec[i], bins=50, range=[0.,1.])
+            self.rho_hist[i] += add_to_hist
 
     def plot_angle_overlap_distribution(self, tempIdx, ax=None):
         if ax is None:
