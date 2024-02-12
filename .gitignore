@@ -2,3 +2,4 @@ MetropolisRuns/**
 **__pycache__**
 **.npy
 **.jld2
+.DS_Store
