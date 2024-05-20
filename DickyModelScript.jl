@@ -59,7 +59,7 @@ function single_run(seed, λrel, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01)# A
 
     dt = 0.0001
     recordtimes = 5000
-    tspan = range(0.0, 100.0 / (2 * κ), recordtimes)
+    tspan = range(0.0, 1000.0 / (2 * κ), recordtimes)
 
     C = sqrt(2 * κ) * a
     H0 = Δc * dagger(a) * a + ωz * Sz + 2 * λ * (dagger(a) + a) * Sx / sqrt(Nspin)
@@ -68,7 +68,7 @@ function single_run(seed, λrel, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01)# A
     ψ0 = exp(im * φinit * Sy) * ψ0
     ψ0 = normalize!(ψ0)
     @assert abs(expect(mb(projector(basisstate(fb, 11)), bases, 2), ψ0)) < 0.01
-    print("Running with seed: ", seed)
+    println("Running with seed: ", seed)
     Hs = C
     Y = dagger(C)
     CdagC = -0.5im * dagger(C) * C
@@ -83,12 +83,14 @@ function single_run(seed, λrel, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01)# A
     return tout, psi_t, W
 end
 
-below = 1.0 .- exp10.(range(-2.0, 0.0, 15))
-above = 1.0 .+ exp10.(range(-2.0, 0.5, 15))
-for seed in cat([42, 1337, 1729, 724, 333, 137, 31459, 271828, 24, 240], mod.(7727 * range(1, 90), 1087))
-    for λrel in cat(below, above; dims=1)
+# below = 1.0 .- exp10.(range(-2.0, 0.0, 15))
+# above = 1.0 .+ exp10.(range(-2.0, 0.5, 15))
+
+for seed in [42, 1337, 1729, 724, 333, 137, 31459, 271828, 24, 240]#cat([42, 1337, 1729, 724, 333, 137, 31459, 271828, 24, 240], mod.(7727 * range(1, 90), 1087), dims=1)
+    for λrel in range(0.0, 5.0, 30)
+        #print("Starting seed=$(seed)lambda=$(round(λrel,digits=3))")
         tout, psi_t, W = single_run(seed, λrel)
-        jldsave("DickeModelRslts/seed=$(seed)lambda=$(round(λrel,digits=3)).jld2"; tout, psi_t, W)
+        jldsave("DickeModelRslts2/seed=$(seed)lambda=$(round(λrel,digits=3)).jld2"; tout, psi_t, W)
     end
 end
 
