@@ -25,6 +25,6 @@ for seed in [42, 1337, 1729, 724, 333, 137, 31459, 271828, 24, 240]#cat([42, 133
     for λrel in range(0.0, 3.0, 30)
         #print("Starting seed=$(seed)lambda=$(round(λrel,digits=3))")
         tout, psi_t, W, fb, sb, bases, a, Sx, Sy, Sz = single_run_dicke_hetrodyne(seed, λrel, κ=κ, tmax=tmax, Nspin=Nspin)
-        jldsave("DickeModelRslts4/seed=$(seed)lambda=$(round(λrel,digits=3)).jld2"; tout, psi_t, W)
+        jldsave("DickeModelRslts5/seed=$(seed)lambda=$(round(λrel,digits=3)).jld2"; tout, psi_t, W)
     end
 end
