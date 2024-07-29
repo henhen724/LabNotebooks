@@ -1,3 +1,4 @@
 [deps]
+DiffEqGPU = "071ae1c0-96b5-11e9-1965-c90190d839ea"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"

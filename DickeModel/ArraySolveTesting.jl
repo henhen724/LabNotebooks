@@ -1,4 +1,4 @@
-using DifferentialEquations, DiffEqGPU, CUDA, ProgressLogging, Plots, SparseArrays, DifferentialEquations.EnsembleAnalysis, StaticArrays
+using DifferentialEquations, DiffEqGPU, SparseArrays, CUDA
 
 function lorenz(du, u, p, t)
     du[1] = p[1] * (u[2] - u[1])
@@ -10,7 +10,7 @@ end
 function multiplicative_noise(du, u, p, t)
     # println(du)
     du[1, 1] = 0.1 #* u[1]
-    du[2, 2] = 0.4
+    # du[2, 2] = 0.4
     du[4, 1] = 1.0
 end
 
@@ -29,4 +29,4 @@ prob_func = (prob, i, repeat) -> remake(prob, p=p)
 monteprob = EnsembleProblem(prob, prob_func=prob_func)
 # EnsembleGPUArray(CUDA.CUDABackend())
 # EnsembleCPUArray()
-sol = solve(monteprob, SRA1(), EnsembleCPUArray(), trajectories=10_000, saveat=1.0f0)
+sol = solve(monteprob, SRA2(), EnsembleThreads(), trajectories=10_000, saveat=1.0f0)
