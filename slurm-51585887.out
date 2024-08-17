@@ -1,9 +1,0 @@
-process: 1 on host sh02-01n01.int
-      From worker 2:	process: 2 on host sh02-01n06.int
-      From worker 3:	process: 3 on host sh02-01n01.int
-      From worker 6:	process: 6 on host sh02-01n06.int
-      From worker 4:	process: 4 on host sh02-01n06.int
-      From worker 5:	process: 5 on host sh02-01n06.int
-      From worker 9:	process: 9 on host sh02-01n01.int
-      From worker 8:	process: 8 on host sh02-01n01.int
-      From worker 7:	process: 7 on host sh02-01n01.int
