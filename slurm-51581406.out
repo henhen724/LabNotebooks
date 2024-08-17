@@ -1,0 +1,2 @@
+/var/spool/slurmd/job51581406/slurm_script: line 10: generate_pbs_nodefile: command not found
+/var/spool/slurmd/job51581406/slurm_script: line 12: julia: command not found

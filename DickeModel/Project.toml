@@ -1,1 +1,6 @@
 [deps]
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
+QuantumOptics = "6e0679c1-51ea-5a7c-ac74-d61b76210b0c"

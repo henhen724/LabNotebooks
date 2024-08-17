@@ -1,0 +1,351 @@
+      From worker 2:	  Activating project at `~/LabNotebooks/DickeModel`
+      From worker 3:	  Activating project at `~/LabNotebooks/DickeModel`
+      From worker 4:	  Activating project at `~/LabNotebooks/DickeModel`
+      From worker 2:	Precompiling project...
+      From worker 2:	[32m  ✓ [39m[90mConcreteStructs[39m
+      From worker 2:	[32m  ✓ [39m[90mSimpleUnPack[39m
+      From worker 2:	[32m  ✓ [39m[90mWorkerUtilities[39m
+      From worker 2:	[32m  ✓ [39m[90mMuladdMacro[39m
+      From worker 2:	[32m  ✓ [39m[90mIteratorInterfaceExtensions[39m
+      From worker 2:	[32m  ✓ [39m[90mExprTools[39m
+      From worker 2:	[32m  ✓ [39m[90mStatsAPI[39m
+      From worker 2:	[32m  ✓ [39m[90mTricks[39m
+      From worker 2:	[32m  ✓ [39m[90mPositiveFactorizations[39m
+      From worker 2:	[32m  ✓ [39m[90mCEnum[39m
+      From worker 2:	[32m  ✓ [39m[90mAbstractFFTs[39m
+      From worker 2:	[32m  ✓ [39m[90mFunctionWrappers[39m
+      From worker 2:	[32m  ✓ [39m[90mADTypes[39m
+      From worker 2:	[32m  ✓ [39m[90mRationalRoots[39m
+      From worker 2:	[32m  ✓ [39m[90mUnPack[39m
+      From worker 2:	[32m  ✓ [39m[90mCombinatorics[39m
+      From worker 2:	[32m  ✓ [39m[90mHalfIntegers[39m
+      From worker 2:	[32m  ✓ [39m[90mIntegerMathUtils[39m
+      From worker 2:	[32m  ✓ [39m[90mUnsafeArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mCommonSolve[39m
+      From worker 2:	[32m  ✓ [39m[90mCompilerSupportLibraries_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mInverseFunctions[39m
+      From worker 2:	[32m  ✓ [39m[90mManualMemory[39m
+      From worker 2:	[32m  ✓ [39m[90mPoissonRandom[39m
+      From worker 2:	[32m  ✓ [39m[90mDataValueInterfaces[39m
+      From worker 2:	[32m  ✓ [39m[90mEnumX[39m
+      From worker 2:	[32m  ✓ [39m[90mSIMDTypes[39m
+      From worker 2:	[32m  ✓ [39m[90mOffsetArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mOrderedCollections[39m
+      From worker 2:	[32m  ✓ [39m[90mCompat[39m
+      From worker 2:	[32m  ✓ [39m[90mReexport[39m
+      From worker 2:	[32m  ✓ [39m[90mSentinelArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mLinearMaps[39m
+      From worker 2:	[32m  ✓ [39m[90mGenericSchur[39m
+      From worker 2:	[32m  ✓ [39m[90mRandomNumbers[39m
+      From worker 2:	[32m  ✓ [39m[90mFillArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mCompositionsBase[39m
+      From worker 2:	[32m  ✓ [39m[90mDocStringExtensions[39m
+      From worker 2:	[32m  ✓ [39m[90mPtrArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mInlineStrings[39m
+      From worker 2:	[32m  ✓ [39m[90mNaNMath[39m
+      From worker 2:	[32m  ✓ [39m[90mIfElse[39m
+      From worker 2:	[32m  ✓ [39m[90mInflate[39m
+      From worker 2:	[32m  ✓ [39m[90mLRUCache[39m
+      From worker 2:	[32m  ✓ [39m[90mTranscodingStreams[39m
+      From worker 2:	[32m  ✓ [39m[90mCpuId[39m
+      From worker 2:	[32m  ✓ [39m[90mCommonWorldInvalidations[39m
+      From worker 2:	[32m  ✓ [39mProgressMeter
+      From worker 2:	[32m  ✓ [39m[90mAdapt[39m
+      From worker 2:	[32m  ✓ [39m[90mPackageExtensionCompat[39m
+      From worker 2:	[32m  ✓ [39m[90mConstructionBase[39m
+      From worker 2:	[32m  ✓ [39m[90mEnzymeCore[39m
+      From worker 2:	[32m  ✓ [39m[90mDataAPI[39m
+      From worker 2:	[32m  ✓ [39m[90mFastClosures[39m
+      From worker 2:	[32m  ✓ [39m[90mIrrationalConstants[39m
+      From worker 2:	[32m  ✓ [39m[90mStaticArraysCore[39m
+      From worker 2:	[32m  ✓ [39m[90mTupleTools[39m
+      From worker 2:	[32m  ✓ [39m[90mFastExpm[39m
+      From worker 2:	[32m  ✓ [39m[90mSuiteSparse[39m
+      From worker 2:	[32m  ✓ [39m[90mGSL_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mRmath_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mFunctors[39m
+      From worker 2:	[32m  ✓ [39m[90mQuantumInterface[39m
+      From worker 2:	[32m  ✓ [39m[90mStatistics[39m
+      From worker 2:	[32m  ✓ [39m[90mIntelOpenMP_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mTableTraits[39m
+      From worker 2:	[32m  ✓ [39m[90mKLU[39m
+      From worker 2:	    ThreadingUtilities[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ThreadingUtilities/FwPmW_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90moneTBB_jll[39m
+      From worker 2:	    Parameters[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Parameters/ycYNs_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mMacroTools[39m
+      From worker 2:	[32m  ✓ [39m[90mFFTW_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mRuntimeGeneratedFunctions[39m
+      From worker 2:	    CompositionsBaseInverseFunctionsExt[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CompositionsBaseInverseFunctionsExt/WTKja_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mFunctionWrappersWrappers[39m
+      From worker 2:	[32m  ✓ [39m[90mFastLapackInterface[39m
+      From worker 2:	[32m  ✓ [39m[90mPrimes[39m
+      From worker 2:	[32m  ✓ [39m[90mArpack_jll[39m
+      From worker 2:	    CodecZlib[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CodecZlib/1TI30_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mRecipesBase[39m
+      From worker 4:	Precompiling project...
+      From worker 2:	[32m  ✓ [39m[90mCompat → CompatLinearAlgebraExt[39m
+      From worker 2:	[32m  ✓ [39m[90mOpenSpecFun_jll[39m
+      From worker 4:	    AliasTables[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/AliasTables/C6bK3_yhG9p.ji.pidfile)[39m
+      From worker 4:	    MLStyle[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/MLStyle/v4qmW_yhG9p.ji.pidfile)[39m
+      From worker 4:	    TimerOutputs[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/TimerOutputs/hd2yD_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mInverseFunctions → InverseFunctionsTestExt[39m
+      From worker 4:	    OffsetArraysAdaptExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/OffsetArraysAdaptExt/evlsb_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mAliasTables[39m
+      From worker 2:	[32m  ✓ [39m[90mInlineStrings → ParsersExt[39m
+      From worker 2:	[32m  ✓ [39m[90mLRUCache → SerializationExt[39m
+      From worker 2:	    Missings[36m Being precompiled by another process (pid: 6044, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Missings/wLfgT_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mCompositionsBase → CompositionsBaseInverseFunctionsExt[39m
+      From worker 2:	    LogExpFunctions[36m Being precompiled by another process (pid: 6044, pidfile: /home/users/hshunt/.julia/compiled/v1.10/LogExpFunctions/cmCYR_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mOffsetArrays → OffsetArraysAdaptExt[39m
+      From worker 4:	[32m  ✓ [39m[90mCompat → CompatLinearAlgebraExt[39m
+      From worker 4:	    Random123[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Random123/1imiM_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mEnzymeCore → AdaptExt[39m
+      From worker 4:	[32m  ✓ [39m[90mFunctionWrappersWrappers[39m
+      From worker 4:	    SerializationExt[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/SerializationExt/u9qhL_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mSundials_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mStridedViews[39m
+      From worker 4:	[32m  ✓ [39m[90mParameters[39m
+      From worker 4:	[32m  ✓ [39m[90mRuntimeGeneratedFunctions[39m
+      From worker 4:	    ADTypesEnzymeCoreExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ADTypesEnzymeCoreExt/KQ4Cg_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mMissings[39m
+      From worker 4:	    Krylov[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Krylov/0fcC3_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mRandom123[39m
+      From worker 2:	[32m  ✓ [39m[90mADTypes → ADTypesEnzymeCoreExt[39m
+      From worker 4:	[32m  ✓ [39m[90mCodecZlib[39m
+      From worker 4:	    Tables[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Tables/Z804B_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mInverseFunctions → InverseFunctionsTestExt[39m
+      From worker 4:	    PooledArrays[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/PooledArrays/vi11X_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mLogExpFunctions[39m
+      From worker 4:	    StaticArrays[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StaticArrays/yY9vm_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mPrimes[39m
+      From worker 2:	[32m  ✓ [39m[90mPooledArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mStatic[39m
+      From worker 2:	[32m  ✓ [39m[90mDiffResults[39m
+      From worker 4:	[32m  ✓ [39m[90mAliasTables[39m
+      From worker 4:	[32m  ✓ [39m[90mEnzymeCore → AdaptExt[39m
+      From worker 2:	[32m  ✓ [39m[90mTimerOutputs[39m
+      From worker 4:	[32m  ✓ [39m[90mThreadingUtilities[39m
+      From worker 4:	[32m  ✓ [39m[90mOffsetArrays → OffsetArraysAdaptExt[39m
+      From worker 2:	[32m  ✓ [39m[90mMissings[39m
+      From worker 3:	Precompiling project...
+      From worker 2:	[32m  ✓ [39m[90mLogExpFunctions[39m
+      From worker 2:	[32m  ✓ [39m[90mParameters[39m
+      From worker 2:	[32m  ✓ [39m[90mRmath[39m
+      From worker 2:	[32m  ✓ [39m[90mPDMats[39m
+      From worker 2:	[32m  ✓ [39m[90mMKL_jll[39m
+      From worker 2:	    ChainRulesCore[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ChainRulesCore/G6ax7_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mStridedViews[39m
+      From worker 4:	[32m  ✓ [39m[90mDiffResults[39m
+      From worker 4:	[32m  ✓ [39m[90mStatic[39m
+      From worker 2:	[32m  ✓ [39m[90mDistances[39m
+      From worker 4:	    LinearMapsStatisticsExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/LinearMapsStatisticsExt/7zyol_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mRandom123[39m
+      From worker 4:	[32m  ✓ [39m[90mFastLapackInterface[39m
+      From worker 3:	    MLStyle[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/MLStyle/v4qmW_yhG9p.ji.pidfile)[39m
+      From worker 3:	    SimpleTraits[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/SimpleTraits/pLp8z_yhG9p.ji.pidfile)[39m
+      From worker 3:	    CommonSubexpressions[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CommonSubexpressions/VMTKN_yhG9p.ji.pidfile)[39m
+      From worker 3:	    TruncatedStacktraces[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/TruncatedStacktraces/pIUUk_yhG9p.ji.pidfile)[39m
+      From worker 3:	    DataStructures[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/DataStructures/xKiwJ_yhG9p.ji.pidfile)[39m
+      From worker 3:	    FilePathsBase[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FilePathsBase/Efv1v_yhG9p.ji.pidfile)[39m
+      From worker 3:	    Krylov[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Krylov/0fcC3_yhG9p.ji.pidfile)[39m
+      From worker 3:	    StaticArrays[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StaticArrays/yY9vm_yhG9p.ji.pidfile)[39m
+      From worker 3:	    PDMats[36m Being precompiled by another process (pid: 6044, pidfile: /home/users/hshunt/.julia/compiled/v1.10/PDMats/wuzEE_yhG9p.ji.pidfile)[39m
+      From worker 3:	    LinearMapsStatisticsExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/LinearMapsStatisticsExt/7zyol_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mLRUCache → SerializationExt[39m
+      From worker 4:	    GSL[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/GSL/cuZHp_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mCodecZlib[39m
+      From worker 2:	    WeakRefStrings[36m Being precompiled by another process (pid: 6044, pidfile: /home/users/hshunt/.julia/compiled/v1.10/WeakRefStrings/muGbw_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mPooledArrays[39m
+      From worker 2:	[32m  ✓ [39m[90mSimpleTraits[39m
+      From worker 2:	    WignerSymbols[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/WignerSymbols/7pxtV_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mTables[39m
+      From worker 2:	    Sparspak[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Sparspak/z79LW_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mThreadingUtilities[39m
+      From worker 2:	    Strided[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Strided/88FL1_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mTimerOutputs[39m
+      From worker 3:	[32m  ✓ [39m[90mADTypes → ADTypesEnzymeCoreExt[39m
+      From worker 3:	    Distances[36m Being precompiled by another process (pid: 6044, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Distances/yuMjt_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mTruncatedStacktraces[39m
+      From worker 2:	[32m  ✓ [39m[90mCommonSubexpressions[39m
+      From worker 2:	    CPUSummary[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CPUSummary/3IE2Z_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mArpack[39m
+      From worker 4:	[32m  ✓ [39m[90mOpenSpecFun_jll[39m
+      From worker 4:	[32m  ✓ [39m[90mRecipesBase[39m
+      From worker 4:	    FilePathsBase[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FilePathsBase/Efv1v_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mStrided[39m
+      From worker 3:	    IterativeSolvers[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/IterativeSolvers/ef2NV_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mSundials_jll[39m
+      From worker 4:	    ChainRulesCore[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ChainRulesCore/G6ax7_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mBitTwiddlingConvenienceFunctions[39m
+      From worker 4:	[32m  ✓ [39m[90mPDMats[39m
+      From worker 4:	    DataStructures[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/DataStructures/xKiwJ_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mMKL_jll[39m
+      From worker 4:	    Sparspak[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Sparspak/z79LW_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mWeakRefStrings[39m
+      From worker 2:	[32m  ✓ [39m[90mLinearMaps → LinearMapsStatisticsExt[39m
+      From worker 3:	[32m  ✓ [39m[90mTruncatedStacktraces[39m
+      From worker 4:	[32m  ✓ [39m[90mDistances[39m
+      From worker 4:	    BitTwiddlingConvenienceFunctions[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/BitTwiddlingConvenienceFunctions/fzQ1O_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mMacroTools[39m
+      From worker 4:	    CPUSummary[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CPUSummary/3IE2Z_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mRmath[39m
+      From worker 4:	    WignerSymbols[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/WignerSymbols/7pxtV_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mArpack[39m
+      From worker 4:	    IterativeSolvers[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/IterativeSolvers/ef2NV_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mSparspak[39m
+      From worker 3:	    GSL[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/GSL/cuZHp_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mFilePathsBase[39m
+      From worker 4:	[32m  ✓ [39m[90mADTypes → ADTypesEnzymeCoreExt[39m
+      From worker 4:	    FillArraysPDMatsExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FillArraysPDMatsExt/ss8Ey_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mCPUSummary[39m
+      From worker 4:	[32m  ✓ [39m[90mTables[39m
+      From worker 4:	    DistancesSparseArraysExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/DistancesSparseArraysExt/2KLYQ_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mBitTwiddlingConvenienceFunctions[39m
+      From worker 2:	[32m  ✓ [39m[90mDistances → DistancesSparseArraysExt[39m
+      From worker 3:	[32m  ✓ [39m[90mChainRulesCore[39m
+      From worker 4:	[32m  ✓ [39m[90mStrided[39m
+      From worker 4:	    SimpleTraits[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/SimpleTraits/pLp8z_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mIterativeSolvers[39m
+      From worker 2:	[32m  ✓ [39m[90mHostCPUFeatures[39m
+      From worker 2:	[32m  ✓ [39m[90mDataStructures[39m
+      From worker 2:	[32m  ✓ [39m[90mFillArrays → FillArraysPDMatsExt[39m
+      From worker 3:	[32m  ✓ [39m[90mPDMats[39m
+      From worker 2:	[32m  ✓ [39m[90mWeakRefStrings[39m
+      From worker 3:	[32m  ✓ [39m[90mMKL_jll[39m
+      From worker 2:	[32m  ✓ [39m[90mStrided[39m
+      From worker 3:	[32m  ✓ [39m[90mSimpleTraits[39m
+      From worker 3:	[32m  ✓ [39m[90mRmath[39m
+      From worker 3:	[32m  ✓ [39m[90mArpack[39m
+      From worker 3:	[32m  ✓ [39m[90mCommonSubexpressions[39m
+      From worker 2:	[32m  ✓ [39m[90mSortingAlgorithms[39m
+      From worker 3:	[32m  ✓ [39m[90mAbstractFFTs → AbstractFFTsChainRulesCoreExt[39m
+      From worker 3:	    FillArraysStatisticsExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FillArraysStatisticsExt/Cj02z_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mADTypes → ADTypesChainRulesCoreExt[39m
+      From worker 4:	[32m  ✓ [39m[90mChainRulesCore[39m
+      From worker 2:	[32m  ✓ [39m[90mFillArrays → FillArraysStatisticsExt[39m
+      From worker 4:	[32m  ✓ [39m[90mFilePathsBase[39m
+      From worker 4:	    TruncatedStacktraces[36m Being precompiled by another process (pid: 5871, pidfile: /home/users/hshunt/.julia/compiled/v1.10/TruncatedStacktraces/pIUUk_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mDataStructures[39m
+      From worker 3:	[32m  ✓ [39m[90mChainRulesCore → ChainRulesCoreSparseArraysExt[39m
+      From worker 3:	    QuadGK[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/QuadGK/hq5Ol_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mDistances[39m
+      From worker 2:	[32m  ✓ [39m[90mCPUSummary[39m
+      From worker 2:	    PolyesterWeave[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/PolyesterWeave/XwY71_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mBitTwiddlingConvenienceFunctions[39m
+      From worker 4:	[32m  ✓ [39m[90mCPUSummary[39m
+      From worker 4:	    LogExpFunctionsChainRulesCoreExt[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/LogExpFunctionsChainRulesCoreExt/1yuhV_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mHostCPUFeatures[39m
+      From worker 3:	[32m  ✓ [39m[90mPolyesterWeave[39m
+      From worker 3:	[32m  ✓ [39m[90mWignerSymbols[39m
+      From worker 4:	[32m  ✓ [39m[90mFillArrays → FillArraysPDMatsExt[39m
+      From worker 4:	    AbstractFFTsTestExt[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/AbstractFFTsTestExt/Pr5Et_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mDistances → DistancesSparseArraysExt[39m
+      From worker 4:	    CSV[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CSV/HHBkp_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mQuadGK[39m
+      From worker 4:	[32m  ✓ [39m[90mSimpleTraits[39m
+      From worker 4:	[32m  ✓ [39m[90mCommonSubexpressions[39m
+      From worker 4:	[32m  ✓ [39m[90mChainRulesCore → ChainRulesCoreSparseArraysExt[39m
+      From worker 4:	    ArrayLayouts[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ArrayLayouts/QloHc_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mDistances → DistancesChainRulesCoreExt[39m
+      From worker 3:	[32m  ✓ [39m[90mLogExpFunctions → LogExpFunctionsChainRulesCoreExt[39m
+      From worker 3:	[32m  ✓ [39m[90mSparseMatrixColorings[39m
+      From worker 4:	[32m  ✓ [39m[90mPolyesterWeave[39m
+      From worker 3:	[32m  ✓ [39m[90mAbstractFFTs → AbstractFFTsTestExt[39m
+      From worker 3:	[32m  ✓ [39m[90mLogExpFunctions → LogExpFunctionsInverseFunctionsExt[39m
+      From worker 4:	[32m  ✓ [39m[90mHostCPUFeatures[39m
+      From worker 2:	[32m  ✓ [39m[90mKrylov[39m
+      From worker 4:	[32m  ✓ [39m[90mDistances → DistancesChainRulesCoreExt[39m
+      From worker 4:	[32m  ✓ [39m[90mLinearMaps → LinearMapsStatisticsExt[39m
+      From worker 3:	[32m  ✓ [39m[90mFillArrays → FillArraysStatisticsExt[39m
+      From worker 3:	    ArrayLayouts[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ArrayLayouts/QloHc_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mChainRulesCore[39m
+      From worker 2:	    FFTW[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FFTW/PvIn2_yhG9p.ji.pidfile)[39m
+      From worker 2:	    StatsBase[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsBase/EZjIG_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mIterativeSolvers[39m
+      From worker 2:	    DifferentiationInterface[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/DifferentiationInterface/eUOjg_yhG9p.ji.pidfile)[39m
+      From worker 2:	    SpecialFunctions[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/SpecialFunctions/78gOt_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mTruncatedStacktraces[39m
+      From worker 4:	[32m  ✓ [39m[90mDataStructures[39m
+      From worker 4:	    DifferentiationInterface[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/DifferentiationInterface/eUOjg_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mQuadGK[39m
+      From worker 2:	[32m  ✓ [39m[90mSparspak[39m
+      From worker 2:	[32m  ✓ [39m[90mPolyesterWeave[39m
+      From worker 4:	[32m  ✓ [39m[90mIterativeSolvers[39m
+      From worker 4:	[32m  ✓ [39m[90mLogExpFunctions → LogExpFunctionsChainRulesCoreExt[39m
+      From worker 4:	    SpecialFunctions[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/SpecialFunctions/78gOt_yhG9p.ji.pidfile)[39m
+      From worker 4:	    StatsBase[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsBase/EZjIG_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mKrylov[39m
+      From worker 3:	[32m  ✓ [39m[90mDifferentiationInterface[39m
+      From worker 3:	[32m  ✓ [39m[90mStatsBase[39m
+      From worker 2:	[32m  ✓ [39m[90mStaticArrays[39m
+      From worker 3:	[32m  ✓ [39m[90mSpecialFunctions[39m
+      From worker 3:	[32m  ✓ [39m[90mLinearMaps → LinearMapsStatisticsExt[39m
+      From worker 3:	[32m  ✓ [39m[90mFilePathsBase[39m
+      From worker 3:	    CSV[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/CSV/HHBkp_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mSparspak[39m
+      From worker 4:	[32m  ✓ [39m[90mWignerSymbols[39m
+      From worker 2:	[32m  ✓ [39m[90mGSL[39m
+      From worker 2:	[32m  ✓ [39m[90mAdapt → AdaptStaticArraysExt[39m
+      From worker 2:	[32m  ✓ [39m[90mConstructionBase → ConstructionBaseStaticArraysExt[39m
+      From worker 2:	[32m  ✓ [39m[90mDifferentiationInterface[39m
+      From worker 4:	[32m  ✓ [39m[90mAbstractFFTs → AbstractFFTsTestExt[39m
+      From worker 4:	    FFTW[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FFTW/PvIn2_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mStaticArrays → StaticArraysStatisticsExt[39m
+      From worker 3:	[32m  ✓ [39m[90mStaticArrays[39m
+      From worker 3:	    StaticArraysChainRulesCoreExt[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StaticArraysChainRulesCoreExt/ETade_yhG9p.ji.pidfile)[39m
+      From worker 3:	    Accessors[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Accessors/XelUh_yhG9p.ji.pidfile)[39m
+      From worker 3:	    Setfield[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Setfield/dVM1R_yhG9p.ji.pidfile)[39m
+      From worker 3:	    ArrayInterface[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ArrayInterface/7bROb_yhG9p.ji.pidfile)[39m
+      From worker 3:	    GPUArraysCore[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/GPUArraysCore/qiYUe_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mGPUArraysCore[39m
+      From worker 2:	[32m  ✓ [39m[90mArrayInterface[39m
+      From worker 3:	[32m  ✓ [39m[90mFFTW[39m
+      From worker 3:	[32m  ✓ [39m[90mSpecialFunctions → SpecialFunctionsChainRulesCoreExt[39m
+      From worker 2:	[32m  ✓ [39m[90mStaticArrays → StaticArraysChainRulesCoreExt[39m
+      From worker 2:	[32m  ✓ [39m[90mArrayInterface → ArrayInterfaceGPUArraysCoreExt[39m
+      From worker 2:	[32m  ✓ [39m[90mSetfield[39m
+      From worker 2:	[32m  ✓ [39m[90mWignerSymbols[39m
+      From worker 3:	[32m  ✓ [39m[90mLevyArea[39m
+      From worker 2:	[32m  ✓ [39m[90mArrayInterface → ArrayInterfaceSparseArraysExt[39m
+      From worker 2:	[32m  ✓ [39m[90mResettableStacks[39m
+      From worker 3:	[32m  ✓ [39m[90mDiffRules[39m
+      From worker 3:	[32m  ✓ [39m[90mHypergeometricFunctions[39m
+      From worker 2:	[32m  ✓ [39m[90mAccessors[39m
+      From worker 2:	[32m  ✓ [39m[90mArrayInterface → ArrayInterfaceStaticArraysCoreExt[39m
+      From worker 4:	[32m  ✓ [39m[90mStatsBase[39m
+      From worker 2:	[32m  ✓ [39m[90mKrylovKit[39m
+      From worker 2:	[32m  ✓ [39m[90mArnoldiMethod[39m
+      From worker 3:	[32m  ✓ [39m[90mKrylov[39m
+      From worker 4:	[32m  ✓ [39m[90mDifferentiationInterface[39m
+      From worker 2:	[32m  ✓ [39m[90mAccessors → AccessorsStaticArraysExt[39m
+      From worker 4:	[32m  ✓ [39m[90mStaticArrays[39m
+      From worker 3:	[32m  ✓ [39m[90mStaticArrays → StaticArraysChainRulesCoreExt[39m
+      From worker 3:	[32m  ✓ [39m[90mArrayInterface[39m
+      From worker 3:	    Graphs[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Graphs/VJ6vx_yhG9p.ji.pidfile)[39m
+      From worker 4:	    Graphs[36m Being precompiled by another process (pid: 5931, pidfile: /home/users/hshunt/.julia/compiled/v1.10/Graphs/VJ6vx_yhG9p.ji.pidfile)[39m
+      From worker 4:	[32m  ✓ [39m[90mSpecialFunctions[39m
+      From worker 4:	    FastGaussQuadrature[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FastGaussQuadrature/vg51R_yhG9p.ji.pidfile)[39m
+      From worker 4:	    StatsFuns[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsFuns/530lR_yhG9p.ji.pidfile)[39m
+      From worker 4:	    ForwardDiff[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ForwardDiff/k0ETY_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mSpecialFunctions[39m
+      From worker 2:	    FastGaussQuadrature[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/FastGaussQuadrature/vg51R_yhG9p.ji.pidfile)[39m
+      From worker 2:	    StatsFuns[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsFuns/530lR_yhG9p.ji.pidfile)[39m
+      From worker 2:	    ForwardDiff[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/ForwardDiff/k0ETY_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mSetfield[39m
+      From worker 3:	[32m  ✓ [39m[90mStatsFuns[39m
+      From worker 3:	[32m  ✓ [39m[90mGSL[39m
+      From worker 3:	[32m  ✓ [39m[90mStatsFuns → StatsFunsInverseFunctionsExt[39m
+      From worker 2:	[32m  ✓ [39m[90mStatsBase[39m
+      From worker 3:	[32m  ✓ [39m[90mGPUArraysCore[39m
+      From worker 4:	[32m  ✓ [39m[90mFFTW[39m
+      From worker 4:	[32m  ✓ [39m[90mStatsFuns[39m
+      From worker 4:	    StatsFunsChainRulesCoreExt[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsFunsChainRulesCoreExt/CNges_yhG9p.ji.pidfile)[39m
+      From worker 2:	[32m  ✓ [39m[90mStatsFuns[39m
+      From worker 2:	    StatsFunsChainRulesCoreExt[36m Being precompiled by another process (pid: 6042, pidfile: /home/users/hshunt/.julia/compiled/v1.10/StatsFunsChainRulesCoreExt/CNges_yhG9p.ji.pidfile)[39m
+      From worker 3:	[32m  ✓ [39m[90mAccessors[39m
+      From worker 3:	[32m  ✓ [39m[90mFastGaussQuadrature[39m
+      From worker 2:	[32m  ✓ [39m[90mMLStyle[39m
+      From worker 3:	[32m  ✓ [39m[90mStatsFuns → StatsFunsChainRulesCoreExt[39m
+      From worker 4:	[32m  ✓ [39m[90mGSL[39m
+      From worker 2:	[32m  ✓ [39m[90mGraphs[39m
+slurmstepd: error: *** JOB 51582719 ON sh02-01n01 CANCELLED AT 2024-08-17T11:57:04 ***

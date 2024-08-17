@@ -1,0 +1,20 @@
+/var/spool/slurmd/job51581890/slurm_script: line 12: generate_pbs_nodefile: command not found
+  Activating project at `~/LabNotebooks/DickeModel`
+ERROR: LoadError: ArgumentError: Package ProgressMeter not found in current path.
+- Run `import Pkg; Pkg.add("ProgressMeter")` to install the ProgressMeter package.
+Stacktrace:
+ [1] macro expansion
+   @ Base ./loading.jl:1766 [inlined]
+ [2] macro expansion
+   @ Base ./lock.jl:267 [inlined]
+ [3] __require(into::Module, mod::Symbol)
+   @ Base ./loading.jl:1747
+ [4] #invoke_in_world#3
+   @ Base ./essentials.jl:921 [inlined]
+ [5] invoke_in_world
+   @ Base ./essentials.jl:918 [inlined]
+ [6] require(into::Module, mod::Symbol)
+   @ Base ./loading.jl:1740
+ [7] top-level scope
+   @ /share/software/user/open/julia/1.10.0/share/julia/stdlib/v1.10/Distributed/src/macros.jl:200
+in expression starting at /home/users/hshunt/LabNotebooks/DickeModel/test_script.jl:12
