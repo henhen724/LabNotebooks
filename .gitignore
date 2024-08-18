@@ -4,3 +4,6 @@ MetropolisRuns/**
 **.jld2
 .DS_Store
 **.png
+**results**
+**data**
+**slurm-*
