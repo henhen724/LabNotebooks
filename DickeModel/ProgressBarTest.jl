@@ -1,4 +1,8 @@
 using DifferentialEquations, ProgressLogging, TerminalLoggers
+using Logging: global_logger
+
+global_logger(TerminalLogger(right_justify=150))
+
 function lorenz!(du, u, p, t)
     du[1] = 10.0(u[2] - u[1])
     du[2] = u[1] * (28.0 - u[3]) - u[2]
