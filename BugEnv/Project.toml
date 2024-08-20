@@ -1,4 +1,2 @@
 [deps]
-DiffEqGPU = "071ae1c0-96b5-11e9-1965-c90190d839ea"
-DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
-SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+BoundaryValueDiffEq = "764a87c0-6b3e-53db-9096-fe964310641d"
