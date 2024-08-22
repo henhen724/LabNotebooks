@@ -2,6 +2,7 @@
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
 Distributed = "8ba89e20-285c-5b6f-9357-94700520ee1b"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
 ProgressMeter = "92933f4c-e287-5a05-a399-4b506db050ca"
 QuantumOptics = "6e0679c1-51ea-5a7c-ac74-d61b76210b0c"
 TerminalLoggers = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"
