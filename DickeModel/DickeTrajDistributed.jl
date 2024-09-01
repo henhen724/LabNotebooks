@@ -9,7 +9,7 @@ end
 
 
 @everywhere begin
-    using QuantumOptics, DiffEqNoiseProcess, DifferentialEquations, ProgressLogging, ProgressMeter, JLD2
+    using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, JLD2
     using TerminalLoggers: TerminalLogger
     using Logging: global_logger
 
@@ -135,7 +135,7 @@ end
             du
         end
 
-        CurrW = RealWienerProcess!(0.0, zeros(num_noise))
+        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise))
 
         prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=CurrW)
         return prob
