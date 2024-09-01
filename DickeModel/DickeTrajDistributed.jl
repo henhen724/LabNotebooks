@@ -1,5 +1,5 @@
 using Distributed
-# instantiate and precompile environment in all processes
+
 @everywhere begin
     using Pkg
     Pkg.activate(@__DIR__)
@@ -9,7 +9,6 @@ end
 
 
 @everywhere begin
-    # load dependencies
     using QuantumOptics, DiffEqNoiseProcess, DifferentialEquations, ProgressLogging, ProgressMeter, JLD2, DataFrames
     using TerminalLoggers: TerminalLogger
     using Logging: global_logger
@@ -142,25 +141,27 @@ end
         return prob
     end
 
-
+    function output_func(sol, i)
+        return (Dict(:t => sol.t, :u => sol.u), false)
+    end
 
     init_prob = prob_func(nothing, 1, 1)
-    ensembleprob = EnsembleProblem(init_prob, prob_func=prob_func)
+    ensembleprob = EnsembleProblem(init_prob, prob_func=prob_func, output_func=output_func)
 end
 
 using Dates
 
-outdir = joinpath(@__DIR__, "results/$(Dates.today())")
+outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
 mkpath(outdir)
 cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 sol = solve(ensembleprob, RKMilGeneral(; ii_approx=IICommutative()), EnsembleDistributed(), trajectories=length(λ0s) * length(λmods) * length(ωmods), adaptive=false,
     dt=(2 // 1)^(-11),
     save_everystep=false,
-    save_start=false,
+    save_start=true,
     save_end=false,
     saveat=tspan,
     callback=full_cb,
     progress=true)
 
-@save joinpath(outdir, "ensemblesol.jld2") DataFrame(sol)
+@save joinpath(outdir, "ensemblesol.jld2") sol
