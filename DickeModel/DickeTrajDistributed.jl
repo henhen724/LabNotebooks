@@ -1,15 +1,20 @@
-using Distributed
+using Distributed, Dates
+
+outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
+mkpath(outdir)
+cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 @everywhere begin
+    println("Hello from process $(myid()) on host $(gethostname()).")
     using Pkg
     Pkg.activate(@__DIR__)
-    Pkg.instantiate()
-    Pkg.precompile()
+    #Pkg.instantiate()
+    #Pkg.precompile()
 end
 
 
 @everywhere begin
-    using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, JLD2
+    using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, JLD2, Dates
     using TerminalLoggers: TerminalLogger
     using Logging: global_logger
 
@@ -38,8 +43,8 @@ end
     Q0 = 0 # charge on the photodiode at time 0
     cl0 = ComplexF64[Q0]
     ψ_sc0 = semiclassical.State(ψ0, cl0)
-    tmax = 50.0#20000.0 # μs
-    recordtimes = 50#20000
+    tmax = 20000.0 # μs
+    recordtimes = 20000
     tspan = range(0.0, tmax, recordtimes)
     stateG = copy(ψ_sc0)
     dstateG = copy(ψ_sc0)
@@ -49,9 +54,9 @@ end
     u0 = zeros(ComplexF64, Ntot)
     semiclassical.recast!(u0, ψ_sc0)
 
-    λ0s = LinRange(0.8, 1.2, 5)
+    λ0s = LinRange(0.5, 1.5, 20)
     λmods = LinRange(0.0, 0.5, 5)
-    ωmods = 2π * 1e-6 * [100.0]#, 500.0, 1000.0, 2000.0]#, 10000.0, 50000.0] #Hz
+    ωmods = 2π * 1e-6 * [100.0,1000.0]# 500.0, 1000.0, 2000.0, 10000.0, 50000.0] #Hz
 
 
     function norm_func(u, t, integrator)
@@ -141,19 +146,17 @@ end
         return prob
     end
 
+
+    outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
     function output_func(sol, i)
-        return (Dict(:t => sol.t, :u => sol.u), false)
+	new_sol = Dict(:t=>sol.t, :u=>sol.u)
+	jldsave(joinpath(outdir, "sol_$(i).jld2");sol=new_sol )
+        return (new_sol, false)
     end
 
     init_prob = prob_func(nothing, 1, 1)
     ensembleprob = EnsembleProblem(init_prob, prob_func=prob_func, output_func=output_func)
 end
-
-using Dates
-
-outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
-mkpath(outdir)
-cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 sol = solve(ensembleprob, RKMilGeneral(; ii_approx=IICommutative()), EnsembleDistributed(), trajectories=length(λ0s) * length(λmods) * length(ωmods), adaptive=false,
     dt=(2 // 1)^(-11),
