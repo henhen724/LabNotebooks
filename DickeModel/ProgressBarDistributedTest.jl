@@ -33,4 +33,4 @@ mkpath(outdir)
 cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 # files to process
-sol = solve(ensembleprob, EnsembleDistributed(), trajectories=1000, progress=true)
+sol = solve(ensembleprob, Tsit5(), EnsembleDistributed(), trajectories=1000, progress=true, progress_name="Ensemble Solve", progress_id=1)
