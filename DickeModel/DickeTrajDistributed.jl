@@ -9,7 +9,7 @@ end
 
 
 @everywhere begin
-    using QuantumOptics, DiffEqNoiseProcess, DifferentialEquations, ProgressLogging, ProgressMeter, JLD2, DataFrames
+    using QuantumOptics, DiffEqNoiseProcess, DifferentialEquations, ProgressLogging, ProgressMeter, JLD2
     using TerminalLoggers: TerminalLogger
     using Logging: global_logger
 
