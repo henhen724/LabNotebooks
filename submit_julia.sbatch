@@ -1,11 +1,12 @@
 #!/bin/bash
 #
-#SBATCH --job-name=test_julia
+#SBATCH --job-name=traj_run
 #
-#SBATCH --time=10:00
-#SBATCH --ntasks=4
-#SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=2G
+#SBATCH -n 9
+#SBATCH --ntasks-per-node 1
+#SBATCH --time 09:00:00
+#SBATCH --output logs/%x-%j.out
+#SBATCH --error logs/%x-%j.err
 
-ml julia
-julia --machine-file <(srun hostname -s) ./DickeModel/test_script.jl
+ml julia/1.10.0
+julia --machine-file <(srun hostname -s) $HOME/LabNotebooks/DickeModel/DickeTrajDistributed.jl

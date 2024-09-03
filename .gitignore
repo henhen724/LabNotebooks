@@ -6,4 +6,5 @@ MetropolisRuns/**
 **.png
 **results**
 **data**
-**slurm-*
+**.out
+**.err
