@@ -1,21 +1,9 @@
 using Distributed, Dates #, ClusterManagers
 
-@everywhere const save_dir = ENV["SCRATCH"] #@__DIR__
-
-outdir = joinpath(save_dir, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
+outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
 mkpath(outdir)
 cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
-# addprocs(SlurmManager(4), partition="normal", t="00:3:00")
-@everywhere begin
-    println("Hello from process $(myid()) on host $(gethostname()).")
-    using Pkg; Pkg.activate(@__DIR__)
-    Pkg.instantiate(); Pkg.precompile()
-    cd(save_dir)
-end
-
-
-@everywhere begin
     using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, JLD2, Dates
     using TerminalLoggers: TerminalLogger
     using Logging: global_logger
@@ -45,8 +33,8 @@ end
     Q0 = 0 # charge on the photodiode at time 0
     cl0 = ComplexF64[Q0]
     ψ_sc0 = semiclassical.State(ψ0, cl0)
-    tmax = 20000.0 # μs
-    recordtimes = 40000
+    tmax = 50.0#20000.0 # μs
+    recordtimes = 50#20000
     tspan = range(0.0, tmax, recordtimes)
     stateG = copy(ψ_sc0)
     dstateG = copy(ψ_sc0)
@@ -58,7 +46,7 @@ end
 
     λ0s = LinRange(0.5, 1.5, 15)
     λmods = [0.05, 0.2, 0.5]#LinRange(0.0, 0.5, 5)
-    ωmods = 2π * 1e-6 * [500.0]#,1000.0]# 500.0, 1000.0, 2000.0, 10000.0, 50000.0] #Hz
+    ωmods = 2π * 1e-6 * [100.0]#,1000.0]# 500.0, 1000.0, 2000.0, 10000.0, 50000.0] #Hz
 
 
     function norm_func(u, t, integrator)
@@ -149,23 +137,16 @@ end
     end
 
 
-    outdir = joinpath(save_dir, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
+    outdir = joinpath(@__DIR__, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
     function output_func(sol, i)
-        new_sol = Dict(:t=>sol.t, :u=>sol.u)
-        try
-            jldsave(joinpath(outdir, "sol_$(i).jld2");sol=new_sol )
-        catch e
-            println("Ensemble $(i) failed to save to a solution file.")
-            println(e)
-        end
+	new_sol = Dict(:t=>sol.t, :u=>sol.u)
+	jldsave(joinpath(outdir, "sol_$(i).jld2");sol=new_sol )
         return (new_sol, false)
     end
 
-    init_prob = prob_func(nothing, 1, 1)
-    ensembleprob = EnsembleProblem(init_prob, prob_func=prob_func, output_func=output_func)
-end
+    init_prob = prob_func(nothing, ARGS[1], 1)
 
-sol = solve(ensembleprob, RKMilGeneral(; ii_approx=IICommutative()), EnsembleSplitThreads(), trajectories=length(λ0s) * length(λmods) * length(ωmods), adaptive=false,
+sol = solve(ensembleprob, RKMilGeneral(; ii_approx=IICommutative()), trajectories=length(λ0s) * length(λmods) * length(ωmods), adaptive=false,
     dt=(2 // 1)^(-11),
     save_everystep=false,
     save_start=true,
