@@ -1,2 +1,6 @@
 [deps]
 BoundaryValueDiffEq = "764a87c0-6b3e-53db-9096-fe964310641d"
+DifferentialEquations = "0c46a032-eb83-5123-abaf-570d42b7fbaa"
+Logging = "56ddb016-857b-54e1-b83d-db4d58db5568"
+ProgressLogging = "33c8b6b6-d38a-422a-b730-caa89a2f386c"
+TerminalLoggers = "5d786b92-1e48-4d6f-9151-6b4477ca9bed"

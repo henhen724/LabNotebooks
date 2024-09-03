@@ -7,11 +7,17 @@ mkpath(outdir)
 cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 # addprocs(SlurmManager(4), partition="normal", t="00:3:00")
-@everywhere begin
+function setup_worker()
     println("Hello from process $(myid()) on host $(gethostname()).")
-    using Pkg; Pkg.activate(@__DIR__)
-    Pkg.instantiate(); Pkg.precompile()
+    using Pkg
+    Pkg.activate(@__DIR__)
+    Pkg.instantiate()
+    Pkg.precompile()
     cd(save_dir)
+end
+
+for i in workers()
+    remotecall_wait(setup_worker, i)
 end
 
 
@@ -142,7 +148,7 @@ end
             du
         end
 
-        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise))
+        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=false)
 
         prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=CurrW)
         return prob
@@ -151,9 +157,9 @@ end
 
     outdir = joinpath(save_dir, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
     function output_func(sol, i)
-        new_sol = Dict(:t=>sol.t, :u=>sol.u)
+        new_sol = Dict(:t => sol.t, :u => sol.u)
         try
-            jldsave(joinpath(outdir, "sol_$(i).jld2");sol=new_sol )
+            jldsave(joinpath(outdir, "sol_$(i).jld2"); sol=new_sol)
         catch e
             println("Ensemble $(i) failed to save to a solution file.")
             println(e)
