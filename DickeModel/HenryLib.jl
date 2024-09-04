@@ -1,6 +1,4 @@
-using QuantumOptics
-using DiffEqNoiseProcess
-using PyPlot
+using QuantumOptics, DiffEqNoiseProcess, PyPlot
 using LaTeXStrings
 using Random
 using DelimitedFiles

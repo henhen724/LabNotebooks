@@ -9,7 +9,7 @@ using DifferentialEquations
 using SpecialFunctions
 using StatsBase
 using SparseArrays
-include("Lib2.jl")
+include("BrendanLib.jl")
 
 # NOTE: Here we are approximating f^±(t) = g(t). This is only true
 # for sufficiently slow ramps, but should be a good approximation for our regimes.
