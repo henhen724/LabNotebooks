@@ -1,21 +1,26 @@
 using Distributed, Dates #, ClusterManagers
 
-@everywhere const save_dir = @__DIR__ #ENV["SCRATCH"]
+@everywhere const save_dir = ENV["SCRATCH"] #@__DIR__
 
 outdir = joinpath(save_dir, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
 mkpath(outdir)
 cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 # addprocs(SlurmManager(4), partition="normal", t="00:3:00")
-@everywhere begin
-    println("Hello from process $(myid()) on host $(gethostname()).")
-    using Pkg
-    Pkg.activate(@__DIR__)
-    Pkg.instantiate()
-    Pkg.precompile()
-    cd(save_dir)
-end
 
+@everywhere begin 
+    using Pkg
+    function setup_worker()
+        println("Hello from process $(myid()) on host $(gethostname()).")
+        Pkg.activate(@__DIR__)
+        Pkg.instantiate()
+        Pkg.precompile()
+        cd(save_dir)
+    end
+end
+for i in workers()
+    remotecall_wait(setup_worker, i)
+end
 
 @everywhere begin
     using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, JLD2, Dates
@@ -130,7 +135,7 @@ end
             du
         end
 
-        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise))
+        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=false)
 
         prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=CurrW)
         return prob
