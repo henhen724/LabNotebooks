@@ -1,14 +1,49 @@
-using DifferentialEquations, ProgressLogging, TerminalLoggers
-using Logging: global_logger
+using Distributed, Dates, ProgressMeter
 
-global_logger(TerminalLogger(right_justify=150))
-
-function lorenz!(du, u, p, t)
-    du[1] = 10.0(u[2] - u[1])
-    du[2] = u[1] * (28.0 - u[3]) - u[2]
-    du[3] = u[1] * u[2] - (8 / 3) * u[3]
+@everywhere begin
+    const save_dir = @__DIR__#ENV["SCRATCH"]
+    using Pkg
 end
-u0 = [1.0; 0.0; 0.0]
-tspan = (0.0, 1000000.0)
-prob = ODEProblem(lorenz!, u0, tspan)
-sol = solve(prob, Tsit5(), progress=true, maxiters=10^10)
+
+outdir = joinpath(save_dir, "results/$(Dates.today())/$(basename(@__FILE__)[begin:end-3])")
+mkpath(outdir)
+cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
+
+function setup_worker()
+    println("Hello from process $(myid()) on host $(gethostname()).")
+    Pkg.activate(@__DIR__)
+    Pkg.instantiate()
+    Pkg.precompile()
+    cd(save_dir)
+end
+
+for i in workers()
+    remotecall_wait(setup_worker, i)
+end
+
+@everywhere begin
+    using JLD2, Dates
+    using TerminalLoggers: TerminalLogger
+    using Logging: global_logger
+    using ProgressMeter: progress, Progress, next!
+
+    global_logger(TerminalLogger(right_justify=150))
+
+    # Create a progress bar to track the progress of all workers combined
+    progress = Progress(length(workers()), desc="Overall Progress")
+
+    # Function to update the progress bar
+    function update_progress()
+        next!(progress)
+    end
+end
+
+# Function to update the progress bar on each worker
+@everywhere function update_worker_progress()
+    update_progress()
+end
+
+# Call the update_worker_progress function on each worker
+for i in workers()
+    remotecall_wait(update_worker_progress, i)
+end
