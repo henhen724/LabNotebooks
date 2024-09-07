@@ -47,6 +47,92 @@ function make_operators(fockmax, Nspin)
     return fb, sb, bases, a, Sx, Sy, Sz, idOp
 end
 
+function make_operators(Nspin)
+    sb = SpinBasis(Nspin // 2)
+    Sx = sigmax(sb) / 2
+    Sy = sigmay(sb) / 2
+    Sz = sigmaz(sb) / 2
+    idOp = identityoperator(sb)
+    return sb, Sx, Sy, Sz, idOp
+end
+
+function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, tmax=500.0, recordtimes=500, CurrW=nothing)
+    sb, Sx, Sy, Sz, idOp = make_operators(Nspin)
+
+    ψ0 = spindown(sb)
+    ψ0 = normalize!(ψ0)
+    Q0 = 0 # charge on the photodiode at time 0
+    cl0 = ComplexF64[Q0]
+    ψ_sc0 = semiclassical.State(ψ0, cl0)
+    tspan = range(0.0, tmax, recordtimes)
+    stateG = copy(ψ_sc0)
+    dstateG = copy(ψ_sc0)
+    Nq = length(ψ_sc0.quantum)
+    Nc = length(ψ_sc0.classical)
+    Ntot = Nq + Nc
+    u0 = zeros(ComplexF64, Ntot)
+    semiclassical.recast!(u0, ψ_sc0)
+    function norm_func(u, t, integrator)
+        semiclassical.recast!(stateG, u)
+        normalize!(stateG)
+        semiclassical.recast!(u, stateG)
+    end
+    ncb = DiffEqCallbacks.FunctionCallingCallback(norm_func;
+        func_everystep=true,
+        func_start=false)
+    full_cb = OrdinaryDiffEq.CallbackSet(nothing, ncb, nothing)
+    gc = sqrt(ωz * (Δc^2 + κ^2) / abs(Nspin * Δc))
+    grel!(t) = (λ0 + λmod * sin(ωmod * t)) * smoothstep!(t / t_ramp)
+
+    αplus = Δc / (-Δc + ωz - im * κ) + Δc / (-Δc - ωz - im * κ)
+    αminus = Δc / (-Δc + ωz - im * κ) - Δc / (-Δc - ωz - im * κ)
+
+    C0 = gc * sqrt(κ) / (2 * Δc) * (αplus * Sx + im * αminus * Sy)
+    C!(t) = grel!(t) * C0
+
+    H0T1 = ωz * Sz
+    H0T2 = (gc)^2 / (4 * Δc) * Sx * (2 * real(αplus) * Sx - 2 * imag(αminus) * Sy)
+    function H0!(t)
+        return H0T1 - H0T2 * (grel!(t))^2
+    end
+    function H_nl!(ψ, t)
+        Ct = C!(t)
+        return im * expect(dagger(Ct), normalize(ψ)) * Ct - 0.5im * dagger(Ct) * Ct - 0.5im * expect(dagger(Ct), normalize(ψ)) * expect(Ct, normalize(ψ)) * idOp
+    end
+    fdet_heterodyne!(t, ψ) = H0!(t) + H_nl!(ψ, t)
+    function fst_heterodyne!(t, ψ)
+        Ct = C!(t)
+        return [(Ct - expect(Ct, normalize(ψ)) * idOp) / sqrt(2), im * (Ct - expect(Ct, normalize(ψ)) * idOp) / sqrt(2)]
+    end
+
+    function f!(du, u, p, t)
+        semiclassical.recast!(dstateG, du)
+        semiclassical.recast!(stateG, u)
+        timeevolution.dschroedinger_dynamic!(dstateG.quantum, fdet_heterodyne!, stateG.quantum, t)
+        dstateG.classical[1] = expect(C!(t), normalize!(stateG.quantum))
+        semiclassical.recast!(du, dstateG)
+    end
+
+    num_noise = length(fst_heterodyne!(0.0, ψ_sc0.quantum))
+    noise_prototype = zeros(ComplexF64, (Ntot, num_noise))
+
+    function g!(du, u, p, t)
+        semiclassical.recast!(stateG, u)
+        dx = @view du[1:Nq, :]
+        stochastic.dschroedinger_stochastic(dx, t, stateG.quantum, fst_heterodyne!, dstateG.quantum, num_noise)
+        du[Nq+1, 1] = 1.0 / sqrt(2)
+        du[Nq+1, 2] = 1.0im / sqrt(2)
+        du
+    end
+
+    if CurrW isa Nothing
+        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=false)
+    end
+
+    prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=CurrW)
+    prob, full_cb, CurrW
+end
+
 function single_run_dicke_hetrodyne(seed, λrel::Number; κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, fockmax=4, Nspin=20, tmax=500.0, dt=0.0001, recordtimes=5000)# ALL IN MHz
     fb, sb, bases, a, Sx, Sy, Sz, idOp = make_operators(fockmax, Nspin)
 
