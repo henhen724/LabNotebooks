@@ -9,4 +9,5 @@
 #SBATCH --error logs/%x-%j.err
 
 ml julia/1.10.0
-julia --machine-file <(srun hostname -s) $HOME/LabNotebooks/DickeModel/DickeTrajDistributed.jl
+julia --machine-file <(srun hostname -s) $HOME/LabNotebooks/DickeModel/DickeRampDistributed.jl
+
