@@ -1,16 +1,4 @@
-using QuantumOptics, DiffEqNoiseProcess, PyPlot
-using LaTeXStrings
-using Random
-using DelimitedFiles
-using NPZ, Printf
-using LinearAlgebra
-using DifferentialEquations
-using SpecialFunctions
-using SparseArrays
-using StatsBase
-using Optim
-using JLD2
-using BenchmarkTools
+using QuantumOptics, OrdinaryDiffEq, StochasticDiffEq, DiffEqCallbacks, ProgressLogging, ProgressMeter, Dates, JLD2, BenchmarkTools
 
 function mb(op, bases, idx)
 
@@ -35,6 +23,16 @@ function mb(op, bases, idx)
     return mbop
 end
 
+function smoothstep!(x)
+    if x < 0
+        return 0
+    elseif x > 1
+        return 1
+    else
+        return 3 * x^2 - 2 * x^3
+    end
+end
+
 function make_operators(fockmax, Nspin)
     fb = FockBasis(fockmax)
     sb = SpinBasis(Nspin // 2)
@@ -56,7 +54,7 @@ function make_operators(Nspin)
     return sb, Sx, Sy, Sz, idOp
 end
 
-function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, tmax=500.0, recordtimes=500, CurrW=nothing)
+function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, tmax=500.0, recordtimes=500, noise=nothing, save_noise=false)
     sb, Sx, Sy, Sz, idOp = make_operators(Nspin)
 
     ψ0 = spindown(sb)
@@ -80,7 +78,6 @@ function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20,
     ncb = DiffEqCallbacks.FunctionCallingCallback(norm_func;
         func_everystep=true,
         func_start=false)
-    full_cb = OrdinaryDiffEq.CallbackSet(nothing, ncb, nothing)
     gc = sqrt(ωz * (Δc^2 + κ^2) / abs(Nspin * Δc))
     grel!(t) = (λ0 + λmod * sin(ωmod * t)) * smoothstep!(t / t_ramp)
 
@@ -125,12 +122,90 @@ function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20,
         du
     end
 
-    if CurrW isa Nothing
-        CurrW = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=false)
+    Base.@pure pure_inference(fout, T) = Core.Compiler.return_type(fout, T)
+    function fout(t, state)
+        copy(state)
+    end
+    function fout_(x, t, integrator)
+        semiclassical.recast!(stateG, x)
+        copy(stateG)
+    end
+    out_type = pure_inference(fout, Tuple{eltype(tspan),typeof(ψ_sc0)})
+    out = DiffEqCallbacks.SavedValues(eltype(tspan), out_type)
+    scb = DiffEqCallbacks.SavingCallback(fout_, out, saveat=tspan,
+        save_everystep=false,
+        save_start=false,
+        tdir=first(tspan) < last(tspan) ? one(eltype(tspan)) : -one(eltype(tspan)))
+    full_cb = OrdinaryDiffEq.CallbackSet(nothing, ncb, scb)
+
+    if noise isa Nothing
+        noise = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=save_noise)
     end
 
-    prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=CurrW)
-    prob, full_cb, CurrW
+    prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=noise)
+    prob, full_cb, tspan, out, noise
+end
+
+function dicke_hetrodyne_atom_only_meanfield_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, t_hold=0.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, tmax=500.0, recordtimes=500, noise=nothing, save_noise=false)
+    # function norm_func(u, t, integrator)
+    #     semiclassical.recast!(stateG, u)
+    #     normalize!(stateG)
+    #     semiclassical.recast!(u, stateG)
+    # end
+    # ncb = DiffEqCallbacks.FunctionCallingCallback(norm_func;
+    #     func_everystep=true,
+    #     func_start=false)
+    tspan = range(0.0, tmax, recordtimes)
+    gc = sqrt(ωz * (Δc^2 + κ^2) / abs(Nspin * Δc))
+    grel!(t) = (λ0 + λmod * sin(ωmod * t)) * smoothstep!((t - t_hold) / t_ramp)
+
+    αplus = Δc / (-Δc + ωz - im * κ) + Δc / (-Δc - ωz - im * κ)
+    αminus = Δc / (-Δc + ωz - im * κ) - Δc / (-Δc - ωz - im * κ)
+
+    spin_len = Nspin / 2.0
+
+    #                       Sx             Sy          Sz              Q
+    u0 = ComplexF64[0.0, 0.0, -spin_len, 0.0]
+
+    function f!(du, u, p, t)
+        du[1] = -(ωz + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[2] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (imag(αminus) - κ / Δc * real(conj(αplus) * αminus)) * u[1] - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[2] + conj(αminus) * αminus * u[1])
+        du[2] = (ωz + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[1] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (2 * real(αplus) * u[1] - (imag(αminus) + (κ / Δc) * real(conj(αplus) * αminus)) * u[2]) - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[1] + conj(αplus) * αplus * u[2])
+        du[3] = (grel!(t) * gc)^2 / (2 * Δc) * (imag(αminus) * (u[2]^2 - u[1]^2) + κ / Δc * real(conj(αplus) * αminus) * (u[2]^2 + u[1]^2) - 2 * real(αplus) * u[2] * u[1]) - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (conj(αplus) * αplus + conj(αminus) * αminus) * u[3]
+        du[4] = grel!(t) * gc * sqrt(κ) / (2 * Δc) * (αplus * u[1] + im * αminus * u[2])
+    end
+
+    num_noise = 2
+    noise_prototype = zeros(ComplexF64, (4, num_noise))
+
+    function g!(du, u, p, t)
+        du[1, 1] = grel!(t) * gc * sqrt(κ) / (2 * Δc) * u[3] * real(αminus)
+        du[2, 1] = -grel!(t) * gc * sqrt(κ) / (2 * Δc) * u[3] * imag(αplus)
+        du[3, 1] = grel!(t) * gc * sqrt(κ) / (2 * Δc) * (u[2] * imag(αplus) - u[1] * real(αminus))
+        du[1, 2] = -grel!(t) * gc * sqrt(κ) / (2 * Δc) * u[3] * imag(αminus)
+        du[2, 2] = -grel!(t) * gc * sqrt(κ) / (2 * Δc) * u[3] * real(αplus)
+        du[3, 2] = grel!(t) * gc * sqrt(κ) / (2 * Δc) * (u[2] * real(αplus) + u[1] * imag(αminus))
+
+        du[4, 1] = 1.0 / sqrt(2)
+        du[4, 2] = 1.0im / sqrt(2)
+    end
+
+    function fout(x, t, integrator)
+        return copy(x)
+    end
+    out_type = typeof(u0)
+    out = DiffEqCallbacks.SavedValues(eltype(tspan), out_type)
+    scb = DiffEqCallbacks.SavingCallback(fout, out, saveat=tspan,
+        save_everystep=false,
+        save_start=false,
+        tdir=first(tspan) < last(tspan) ? one(eltype(tspan)) : -one(eltype(tspan)))
+    full_cb = OrdinaryDiffEq.CallbackSet(nothing, nothing, scb)
+
+    if noise isa Nothing
+        noise = StochasticDiffEq.RealWienerProcess!(0.0, zeros(num_noise), save_everystep=save_noise)
+    end
+
+    prob = SDEProblem(f!, g!, u0, (tspan[begin], tspan[end]); noise_rate_prototype=noise_prototype, noise=noise)
+    prob, full_cb, tspan, out, noise
 end
 
 function single_run_dicke_hetrodyne(seed, λrel::Number; κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, fockmax=4, Nspin=20, tmax=500.0, dt=0.0001, recordtimes=5000)# ALL IN MHz
@@ -167,7 +242,7 @@ function single_run_dicke_hetrodyne(seed, λrel::Number; κ=2π * 0.15, Δc=2π 
     fdet_homodyne(t, ψ) = H0 + H_nl(ψ)
     fst_homodyne(t, ψ) = [C - expect(C, normalize(ψ)) * idOp]
 
-    W = WienerProcess(0.0, im * 0.0, im * 0.0)
+    W = StochasticDiffEq.WienerProcess(0.0, im * 0.0, im * 0.0)
 
     tout, psi_t = stochastic.schroedinger_dynamic(tspan, ψ0, fdet_homodyne, fst_homodyne; dt=dt, normalize_state=true, noise=W, seed=seed, alg=SOSRI2(), reltol=10^-4, abstol=10^-4, maxiters=10^8)
     return tout, psi_t, W, fb, sb, bases, a, Sx, Sy, Sz
@@ -198,7 +273,7 @@ function single_run_dicke_hetrodyne(seed, λrel::Function; κ=2π * 0.15, Δc=2�
     fdet_homodyne(t, ψ) = H0(t) + H_nl(ψ)
     fst_homodyne(t, ψ) = [C - expect(C, normalize(ψ)) * idOp]
 
-    W = WienerProcess(0.0, im * 0.0, im * 0.0)
+    W = StochasticDiffEq.WienerProcess(0.0, im * 0.0, im * 0.0)
 
     tout, psi_t = stochastic.schroedinger_dynamic(tspan, ψ0, fdet_homodyne, fst_homodyne; dt=dt, normalize_state=true, noise=W, seed=seed, alg=SOSRI2(), reltol=10^-4, abstol=10^-4, maxiters=10^8)
     return tout, psi_t, W, fb, sb, bases, a, Sx, Sy, Sz
