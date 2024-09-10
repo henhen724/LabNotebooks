@@ -8,7 +8,7 @@ cp(@__FILE__, joinpath(outdir, "gen_script.jl"), force=true)
 
 # addprocs(SlurmManager(4), partition="normal", t="00:3:00")
 
-@everywhere begin 
+@everywhere begin
     using Pkg
     function setup_worker()
         println("Hello from process $(myid()) on host $(gethostname()).")
@@ -82,7 +82,7 @@ end
 
     function prob_func(old_prob, i, repeat)
         κ = 2π * 0.15 # MHz
-        Δc = 2π * 20 # MHz
+        Δc = -2π * 80 # MHz
         ωz = 2π * 0.01 # MHz
         idx1 = div(i - 1, length(t_ramps)) + 1
         idx2 = ((i - 1) % length(t_ramps)) + 1
