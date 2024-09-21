@@ -33,6 +33,24 @@ function smoothstep!(x)
     end
 end
 
+function rescaled_autodensity!(values)
+    median_v = median(values)
+    val_hat = abs.(values .- median_v)
+    sigma_dx = std(val_hat[begin+1:end] - val_hat[begin:end-1])
+    median_hat = median(val_hat)
+    Up = val_hat[val_hat.>median_hat]
+    Down = val_hat[val_hat.<=median_hat]
+    return sigma_dx * (1.0 / std(Up) - 1.0 / std(Down))
+end
+function binder!(values)
+    val_hat = values .- mean(values)
+    return 1 - mean(val_hat .^ 4) / (3 * mean(val_hat .^ 2)^2)
+end
+
+function binder_no_mean_sub!(values)
+    return 1 - mean(values .^ 4) / (3 * mean(values .^ 2)^2)
+end
+
 function make_operators(fockmax, Nspin)
     fb = FockBasis(fockmax)
     sb = SpinBasis(Nspin // 2)
