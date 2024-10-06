@@ -1,0 +1,120 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.1' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      3590,        110]
+NotebookOptionsPosition[      3025,         92]
+NotebookOutlinePosition[      3416,        108]
+CellTagsIndexPosition[      3373,        105]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"-", "I"}], "*", 
+    RowBox[{"D", "/", 
+     RowBox[{"(", 
+      RowBox[{
+       SuperscriptBox[
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"a\[Omega]", "^", "2"}], " ", "-", " ", 
+          RowBox[{
+           SuperscriptBox["k", "2"], "/", 
+           SubscriptBox["m", "*"]}], " ", "-", " ", "r"}], ")"}], "2"], " ", 
+       "+", " ", 
+       RowBox[{
+        SuperscriptBox["\[Gamma]", "2"], 
+        SuperscriptBox["\[Omega]", "2"]}]}], ")"}]}]}], ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"\[Omega]", ",", " ", 
+     RowBox[{"-", "\[Infinity]"}], ",", " ", "\[Infinity]"}], "}"}], ",", " ", 
+   RowBox[{"{", 
+    RowBox[{"k", ",", "\[CapitalLambda]", ",", " ", 
+     RowBox[{"\[CapitalLambda]", "*", "b"}]}], "}"}]}], "]"}]], "Input",
+ CellChangeTimes->{{3.9366474098427134`*^9, 3.936647545912807*^9}, {
+  3.936647646626664*^9, 3.936647679557199*^9}},
+ CellLabel->"In[4]:=",ExpressionUUID->"ed7abed1-6f41-4842-bd69-5b38107b354d"],
+
+Cell[BoxData[
+ TemplateBox[{
+  "Integrate", "ilim", 
+   "\"Invalid integration variable or limit(s) in \\!\\(\\*RowBox[{\\\"{\\\", \
+RowBox[{\\\"\[CapitalLambda]\\\", \\\",\\\", RowBox[{\\\"b\\\", \\\" \\\", \\\
+\"\[CapitalLambda]\\\"}]}], \\\"}\\\"}]\\).\"", 2, 3, 1, 27030412693425100521,
+    "Local"},
+  "MessageTemplate"]], "Message", "MSG",
+ CellChangeTimes->{3.936647662701489*^9},
+ CellLabel->
+  "During evaluation of \
+In[3]:=",ExpressionUUID->"6a0861d7-969c-45b2-a25c-39b2f55bfe4d"],
+
+Cell[BoxData[
+ RowBox[{"Integrate", "[", 
+  RowBox[{
+   RowBox[{"-", 
+    FractionBox[
+     RowBox[{"\[ImaginaryI]", " ", "D"}], 
+     RowBox[{
+      RowBox[{
+       SuperscriptBox["\[Gamma]", "2"], " ", 
+       SuperscriptBox["\[Omega]", "2"]}], "+", 
+      SuperscriptBox[
+       RowBox[{"(", 
+        RowBox[{
+         SuperscriptBox["a\[Omega]", "2"], "-", "r", "-", 
+         FractionBox[
+          SuperscriptBox["k", "2"], 
+          SubscriptBox["m", "*"]]}], ")"}], "2"]}]]}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[Omega]", ",", 
+     RowBox[{"-", "\[Infinity]"}], ",", "\[Infinity]"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\[CapitalLambda]", ",", 
+     RowBox[{"b", " ", "\[CapitalLambda]"}]}], "}"}]}], "]"}]], "Output",
+ CellChangeTimes->{
+  3.936647551519663*^9, {3.936647650113821*^9, 3.936647662712726*^9}},
+ CellLabel->"Out[3]=",ExpressionUUID->"50ebb691-1f84-49dc-a217-86f15672b174"]
+}, Open  ]]
+},
+WindowSize->{808, 881},
+WindowMargins->{{4, Automatic}, {Automatic, 4}},
+FrontEndVersion->"13.1 for Mac OS X ARM (64-bit) (June 16, 2022)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"0db4016a-2d9a-438a-adaf-a583775d9b0b"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 1026, 27, 34, "Input",ExpressionUUID->"ed7abed1-6f41-4842-bd69-5b38107b354d"],
+Cell[1609, 51, 491, 11, 28, "Message",ExpressionUUID->"6a0861d7-969c-45b2-a25c-39b2f55bfe4d"],
+Cell[2103, 64, 906, 25, 67, "Output",ExpressionUUID->"50ebb691-1f84-49dc-a217-86f15672b174"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
+

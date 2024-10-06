@@ -23,6 +23,14 @@ function mb(op, bases, idx)
     return mbop
 end
 
+function v_shape(x, neg_slope, pos_slope)
+    if x > 0.0
+        return pos_slope * x
+    else
+        return neg_slope * x
+    end
+end
+
 function smoothstep!(x)
     if x < 0
         return 0
@@ -164,7 +172,7 @@ function dicke_hetrodyne_atom_only_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20,
     prob, full_cb, tspan, out, noise
 end
 
-function dicke_hetrodyne_atom_only_meanfield_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, t_hold=0.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, tmax=500.0, recordtimes=500, noise=nothing, save_noise=false)
+function dicke_hetrodyne_atom_only_meanfield_prob(; Nspin=10, κ=2π * 0.15, Δc=2π * 20, ωz=2π * 0.01, λ0=1.0, t_ramp=500.0, t_hold=0.0, λmod=0.0, ωmod=2π * 1e-6 * 500.0, Sxinit=0.0, Syinit=0.0, Szinit=-Nspin / 2, tmax=500.0, recordtimes=500, noise=nothing, save_noise=false)
     # function norm_func(u, t, integrator)
     #     semiclassical.recast!(stateG, u)
     #     normalize!(stateG)
@@ -175,7 +183,7 @@ function dicke_hetrodyne_atom_only_meanfield_prob(; Nspin=10, κ=2π * 0.15, Δc
     #     func_start=false)
     tspan = range(0.0, tmax, recordtimes)
     gc = sqrt(ωz * (Δc^2 + κ^2) / abs(Nspin * Δc))
-    grel!(t) = (λ0 + λmod * sin(ωmod * t)) * smoothstep!((t - t_hold) / t_ramp)
+    grel!(t) = λ0 * sqrt(smoothstep!((t - t_hold) / t_ramp))
 
     αplus = Δc / (-Δc + ωz - im * κ) + Δc / (-Δc - ωz - im * κ)
     αminus = Δc / (-Δc + ωz - im * κ) - Δc / (-Δc - ωz - im * κ)
@@ -183,11 +191,12 @@ function dicke_hetrodyne_atom_only_meanfield_prob(; Nspin=10, κ=2π * 0.15, Δc
     spin_len = Nspin / 2.0
 
     #                       Sx             Sy          Sz              Q
-    u0 = ComplexF64[0.0, 0.0, -spin_len, 0.0]
+    u0 = ComplexF64[Sxinit, Syinit, Szinit, 0.0]
 
     function f!(du, u, p, t)
-        du[1] = -(ωz + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[2] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (imag(αminus) - κ / Δc * real(conj(αplus) * αminus)) * u[1] - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[2] + conj(αminus) * αminus * u[1])
-        du[2] = (ωz + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[1] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (2 * real(αplus) * u[1] - (imag(αminus) + (κ / Δc) * real(conj(αplus) * αminus)) * u[2]) - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[1] + conj(αplus) * αplus * u[2])
+        ωzt = ωz #* (1 - smoothstep!((t - t_hold) / t_ramp))
+        du[1] = -(ωzt + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[2] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (imag(αminus) - κ / Δc * real(conj(αplus) * αminus)) * u[1] - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[2] + conj(αminus) * αminus * u[1])
+        du[2] = (ωzt + real(αminus) * (grel!(t) * gc)^2 / (4 * Δc)) * u[1] + (grel!(t) * gc)^2 * u[3] / (2 * Δc) * (2 * real(αplus) * u[1] - (imag(αminus) + (κ / Δc) * real(conj(αplus) * αminus)) * u[2]) - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (imag(conj(αplus) * αminus) * u[1] + conj(αplus) * αplus * u[2])
         du[3] = (grel!(t) * gc)^2 / (2 * Δc) * (imag(αminus) * (u[2]^2 - u[1]^2) + κ / Δc * real(conj(αplus) * αminus) * (u[2]^2 + u[1]^2) - 2 * real(αplus) * u[2] * u[1]) - (grel!(t) * gc)^2 * κ / (4 * Δc^2) * (conj(αplus) * αplus + conj(αminus) * αminus) * u[3]
         du[4] = grel!(t) * gc * sqrt(κ) / (2 * Δc) * (αplus * u[1] + im * αminus * u[2])
     end
