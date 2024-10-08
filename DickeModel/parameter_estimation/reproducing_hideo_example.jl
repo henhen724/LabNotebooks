@@ -27,11 +27,11 @@ end
 ω = 0.0#MHz Cavity frequency
 κ = 2π * 30.0#MHz Decay rate
 g = 2π * 45.0#MHz Coupling strength
-ε = 44.3#MHz Drive strength
+ε = 2π * 44.3#MHz Drive strength
 γperp = 2π * 2.5#MHz Spotaneous emission rate
 
 # Define basis and operators
-N = 10  # Truncation of Fock space
+N = 10 # Truncation of Fock space
 fb = FockBasis(N)
 sb = SpinBasis(1 // 2)
 bases = [fb, sb]
@@ -41,18 +41,18 @@ a = mb(destroy(fb), bases, 1)
 idOp = mb(identityoperator(sb), bases, 2)
 
 # Define Hamiltonian
-Heff = ω * dagger(a) * a + g * (dagger(a) * σm + a * dagger(σm)) + ε * (a - dagger(a)) * σm
+Heff = im * g * (a * dagger(σm) - dagger(a) * σm) + im * ε * (a - dagger(a)) #- im  * γperp * dagger(σm) * σm - im  * κ * dagger(a) * a
 
 # Define collapse operators
 c_ops = [sqrt(2 * γperp) * σm, sqrt(2 * κ) * a]
 
 # Initial state (coherent state)
-α = 0.5#im * ε / (κ / 2)
+α = 0.0#im * ε / (κ / 2)
 ψ0 = tensor(coherentstate(fb, α), spindown(sb))
 
 # Time evolution
-tlist = 0:0.001:1
-tout, psi_t = timeevolution.mcwf_h(tlist, ψ0, Heff, c_ops)
+tlist = 0:0.00001:1
+tout, psi_t = timeevolution.mcwf(tlist, ψ0, Heff, c_ops)
 
 
 # Plot results
@@ -63,16 +63,17 @@ plot(tlist, real(expect(idOp, psi_t)), xlabel="Time", ylabel="Normalization", la
 
 
 # Function to calculate probabilities of each Fock state
-function fock_probabilities(result, N)
-    probs = zeros(length(result.t), N + 1)
-    for i in 1:length(result.t)
+function fock_probabilities(tout, psi_t, N)
+    probs = zeros(length(tout), N + 1)
+    for i in 1:length(tout)
         for n in 0:N
-            fock_state = tensor(fockstate(fb, n), spindown(sb))
-            probs[i, n+1] = real(expect(fock_state * dagger(fock_state), result.states[i]))
+            fock_proj = tensor(projector(fockstate(fb, n)), identityoperator(sb))
+            probs[i, n+1] = real(expect(fock_proj, psi_t[i]))
         end
     end
     return probs
 end
 
 # Plot probabilities
+probs = fock_probabilities(tout, psi_t, N)
 plot(tlist, probs, xlabel="Time", ylabel="Probability", label=["|0⟩" "|1⟩" "|2⟩" "|3⟩" "|4⟩" "|5⟩" "|6⟩" "|7⟩" "|8⟩" "|9⟩" "|10⟩"])
